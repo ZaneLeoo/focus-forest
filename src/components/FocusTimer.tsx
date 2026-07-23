@@ -300,9 +300,9 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
   }
 
   return (
-    <div className="w-full max-w-xl mx-auto flex flex-col items-center py-1 space-y-2 sm:space-y-3">
+    <div className="w-full max-w-xl mx-auto flex flex-col items-center py-0.5 space-y-1.5 sm:space-y-3">
       {/* Greeting Header */}
-      <section className="w-full text-center flex flex-col items-center gap-1 pt-2 sm:pt-6">
+      <section className="w-full text-center flex flex-col items-center gap-1 pt-0 sm:pt-4">
         <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#b1ebba]/30 rounded-full border border-[#2f6b4f]/20 shadow-2xs">
           <span className="material-symbols-outlined text-[#346942] fill-1 text-base">eco</span>
           <span className="text-[#346942] font-semibold text-xs md:text-sm">
