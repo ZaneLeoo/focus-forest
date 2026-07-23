@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import { useFocus } from './context/FocusContext';
 import { ViewMode, PlantedTree, UserSettings, NavTab } from './types';
 import {
@@ -12,14 +12,22 @@ import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
 import { FocusTimer } from './components/FocusTimer';
-import { ForestView } from './components/ForestView';
-import { StatsView } from './components/StatsView';
-import { SettingsView } from './components/SettingsView';
 import { TreeDetailModal } from './components/TreeDetailModal';
 import { SpeciesPickerModal } from './components/SpeciesPickerModal';
 import { AmbientSoundModal } from './components/AmbientSoundModal';
 import { GardenerProfileModal } from './components/GardenerProfileModal';
 import { LoginView } from './components/LoginView';
+
+// Lazy-loaded views — only downloaded when user navigates to them
+const ForestView = lazy(() => import('./components/ForestView'));
+const StatsView = lazy(() => import('./components/StatsView'));
+const SettingsView = lazy(() => import('./components/SettingsView'));
+
+const ViewFallback = () => (
+  <div className="flex items-center justify-center min-h-[50vh]">
+    <div className="w-8 h-8 border-3 border-[#125238] border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 export default function App() {
   const { isLoggedIn, userName, userAvatar, setUserAvatar, login, logout, selectedSpeciesId, setSelectedSpeciesId, navTab, setNavTab, settings, updateSettings, sessions } = useFocus();
@@ -159,21 +167,29 @@ export default function App() {
         </div>
 
         <div className={currentView === 'forest' ? '' : 'hidden'}>
-          <ForestView />
+          <Suspense fallback={<ViewFallback />}>
+            {currentView === 'forest' && <ForestView />}
+          </Suspense>
         </div>
 
         <div className={currentView === 'stats' ? '' : 'hidden'}>
-          <StatsView trees={trees} />
+          <Suspense fallback={<ViewFallback />}>
+            {currentView === 'stats' && <StatsView trees={trees} />}
+          </Suspense>
         </div>
 
         <div className={currentView === 'settings' ? '' : 'hidden'}>
-          <SettingsView
-            settings={settings}
-            onUpdateSettings={handleUpdateSettings}
-            onExportCSV={handleExportCSV}
-            onResetData={handleResetData}
-            onOpenAmbientModal={() => setShowAmbientModal(true)}
-          />
+          <Suspense fallback={<ViewFallback />}>
+            {currentView === 'settings' && (
+              <SettingsView
+                settings={settings}
+                onUpdateSettings={handleUpdateSettings}
+                onExportCSV={handleExportCSV}
+                onResetData={handleResetData}
+                onOpenAmbientModal={() => setShowAmbientModal(true)}
+              />
+            )}
+          </Suspense>
         </div>
       </main>
 
