@@ -15,9 +15,10 @@ function run(cmd) {
 
 function deploy() {
   const log = [];
+  const NODE_BIN = '/root/.nvm/versions/node/v22.23.1/bin';
   log.push('[DEPLOY] git pull:\n' + run('git pull origin master 2>&1'));
-  log.push('[DEPLOY] npm install:\n' + run('source /root/.nvm/nvm.sh && nvm use 22 && npm install 2>&1'));
-  log.push('[DEPLOY] build:\n' + run('source /root/.nvm/nvm.sh && nvm use 22 && npm run build 2>&1'));
+  log.push('[DEPLOY] npm install:\n' + run('export PATH=' + NODE_BIN + ':$PATH && npm install 2>&1'));
+  log.push('[DEPLOY] build:\n' + run('export PATH=' + NODE_BIN + ':$PATH && npm run build 2>&1'));
   log.push('[DEPLOY] restart:\n' + run('export PATH=/root/.nvm/versions/node/v22.23.1/bin:$PATH && pm2 restart focus-forest 2>&1'));
   return log.join('\n\n');
 }
