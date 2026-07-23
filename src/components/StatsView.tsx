@@ -138,17 +138,17 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
       <section className="mb-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
           <div>
-            <h2 className="font-bold text-3xl text-[#26332C] mb-2">我的成长旅程</h2>
-            <p className="text-xs md:text-sm text-[#768078] max-w-xl">
-              每一分钟的专注都是在你的个人生态系统中种下的一颗种子。观察你的森林在过去一周是如何繁茂生长的。
-            </p>
+            <h2 className="font-bold text-2xl sm:text-3xl text-[#26332C] mb-1">我的成长旅程</h2>
+            <p className="text-xs text-[#768078]">每一分钟的专注，都在森林里种下一棵树。</p>
           </div>
-          <div className="flex items-center gap-2 bg-[#2f6b4f]/10 px-4 py-3 rounded-2xl border border-[#2f6b4f]/20">
-            <span className="material-symbols-outlined text-[#125238]">auto_awesome</span>
-            <p className="text-xs font-bold text-[#125238]">
-              本周你在上午 9 点到 11 点之间最专注。
-            </p>
-          </div>
+          {trees.length > 0 && (
+            <div className="flex items-center gap-2 bg-[#2f6b4f]/10 px-3 py-2 rounded-xl border border-[#2f6b4f]/20">
+              <span className="material-symbols-outlined text-[#125238] text-lg">auto_awesome</span>
+              <p className="text-xs font-bold text-[#125238]">
+                已累计专注 {totalHours} 小时 {remainingMins} 分钟
+              </p>
+            </div>
+          )}
         </div>
 
         {/* Key Metrics Bento */}
@@ -158,10 +158,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
               <span className="text-[#768078] font-bold text-xs">总专注时长</span>
               <span className="material-symbols-outlined text-[#9CAD7B]">schedule</span>
             </div>
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-bold text-[#125238]">{totalTimeStr}</h3>
-              <span className="text-xs text-[#346942] font-bold">+12%</span>
-            </div>
+            <h3 className="text-3xl font-bold text-[#125238]">{totalTimeStr}</h3>
           </div>
 
           <div className="bg-[#FFFEF8] rounded-2xl p-6 shadow-xs border border-[#125238]/5 relative overflow-hidden">
@@ -169,10 +166,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
               <span className="text-[#768078] font-bold text-xs">平均单次时长</span>
               <span className="material-symbols-outlined text-[#9CAD7B]">timer</span>
             </div>
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-bold text-[#125238]">{avgMinutes}m</h3>
-              <span className="text-xs text-[#768078]">稳定</span>
-            </div>
+            <h3 className="text-3xl font-bold text-[#125238]">{avgMinutes}m</h3>
           </div>
 
           <div className="bg-[#FFFEF8] rounded-2xl p-6 shadow-xs border border-[#125238]/5 relative overflow-hidden">
@@ -180,10 +174,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
               <span className="text-[#768078] font-bold text-xs">种植完成率</span>
               <span className="material-symbols-outlined text-[#9CAD7B]">task_alt</span>
             </div>
-            <div className="flex items-baseline gap-2">
-              <h3 className="text-3xl font-bold text-[#125238]">{completionRate}%</h3>
-              <span className="text-xs text-[#346942] font-bold">+5%</span>
-            </div>
+            <h3 className="text-3xl font-bold text-[#125238]">{completionRate}%</h3>
           </div>
         </div>
       </section>
@@ -194,8 +185,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
         <div className="bg-[#FFFEF8] rounded-2xl p-6 shadow-xs border border-[#125238]/5 flex flex-col h-[380px]">
           <div className="flex justify-between items-start mb-6">
             <div>
-              <h4 className="font-bold text-lg text-[#26332C]">专注时间趋势</h4>
-              <p className="text-xs text-[#768078]">每日专注时长 (分钟)</p>
+              <h4 className="font-bold text-lg text-[#26332C]">专注趋势</h4>
             </div>
             <select
               value={timeRange}
@@ -232,7 +222,6 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
         <div className="bg-[#FFFEF8] rounded-2xl p-6 shadow-xs border border-[#125238]/5 flex flex-col h-[380px]">
           <div className="mb-4">
             <h4 className="font-bold text-lg text-[#26332C]">任务分类</h4>
-            <p className="text-xs text-[#768078]">专注精力的分布情况</p>
           </div>
 
           <div className="flex-1 flex items-center justify-around">
@@ -281,7 +270,6 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
             <div>
               <h4 className="font-bold text-lg text-[#26332C]">种植稳定性</h4>
-              <p className="text-xs text-[#768078]">每日专注积累的森林脉络</p>
             </div>
             <div className="flex items-center gap-2 text-xs text-[#768078]">
               <span>少</span>
@@ -320,12 +308,14 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
             </div>
           </div>
 
-          <div className="mt-6 flex items-center gap-2 p-3.5 bg-[#b1f0cd]/20 rounded-xl border border-[#b1f0cd]">
-            <span className="material-symbols-outlined text-[#125238] text-lg">energy_savings_leaf</span>
-            <p className="text-xs text-[#105137] font-medium">
-              <strong>当前连续天数：</strong> 12 天。继续保持，你的森林正在茁壮成长！
-            </p>
-          </div>
+          {trees.length > 0 && (
+            <div className="mt-6 flex items-center gap-2 p-3 bg-[#b1f0cd]/20 rounded-xl border border-[#b1f0cd]">
+              <span className="material-symbols-outlined text-[#125238] text-lg">energy_savings_leaf</span>
+              <p className="text-xs text-[#105137] font-medium">
+                已种下 <strong>{trees.length}</strong> 棵树，继续加油！
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>
