@@ -366,7 +366,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
                   <Tree3DCanvas
                     speciesId={selectedSpeciesId}
                     progress={growthProgress}
-                    isCompleted={timerStatus === 'idle' ? false : remainingSeconds === 0}
+                    isCompleted={growthProgress >= 1.0}
                   />
                 </div>
                 {/* Countdown Display overlaid below tree */}
