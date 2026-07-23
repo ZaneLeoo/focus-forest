@@ -47,11 +47,14 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
     camera.position.set(0, 2.4, 8.4);
     cameraRef.current = camera;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+    const renderer = new THREE.WebGLRenderer({ antialias: !isMobile, alpha: true });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
+    renderer.shadowMap.enabled = !isMobile;
+    if (!isMobile) {
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    }
     rendererRef.current = renderer;
 
     container.innerHTML = '';
@@ -119,12 +122,19 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
     foliageGroupRef.current = foliageGroup;
     treeGroup.add(foliageGroup);
 
-    // Animation loop
+    // Animation loop — pauses when page is hidden or container detached
     let animationFrameId: number;
+    let isPageVisible = true;
     const clock = new THREE.Clock();
+
+    const handleVisibility = () => {
+      isPageVisible = document.visibilityState === 'visible';
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
+      if (!isPageVisible || !container.isConnected) return;
       const elapsedTime = clock.getElapsedTime();
 
       if (foliageGroupRef.current) {
@@ -179,6 +189,7 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
     resizeObserver.observe(container);
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('resize', handleResize);
       resizeObserver.disconnect();
       cancelAnimationFrame(animationFrameId);

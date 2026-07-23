@@ -154,17 +154,19 @@ export default function App() {
 
       {/* Main Content Area — all views kept mounted, hidden via CSS */}
       <main className="px-4 md:pl-72 md:pr-8 transition-all pt-20 pb-24 md:pt-24 md:pb-12 min-h-screen">
-        <div className={currentView === 'timer' ? 'min-h-[calc(100vh-9rem)] min-h-[calc(100svh-9rem)] flex flex-col items-center justify-center pb-4' : 'hidden'}>
-          <FocusTimer
-            settings={settings}
-            onUpdateSettings={handleUpdateSettings}
-            onTreeCompleted={handleTreeCompleted}
-            todayTreesCount={todayTreesCount}
-            onOpenAmbientModal={() => setShowAmbientModal(true)}
-            onOpenSpeciesModal={() => setShowSpeciesModal(true)}
-            selectedSpeciesId={selectedSpeciesId}
-          />
-        </div>
+        {currentView === 'timer' && (
+          <div className="min-h-[calc(100vh-9rem)] min-h-[calc(100svh-9rem)] flex flex-col items-center justify-center pb-4">
+            <FocusTimer
+              settings={settings}
+              onUpdateSettings={handleUpdateSettings}
+              onTreeCompleted={handleTreeCompleted}
+              todayTreesCount={todayTreesCount}
+              onOpenAmbientModal={() => setShowAmbientModal(true)}
+              onOpenSpeciesModal={() => setShowSpeciesModal(true)}
+              selectedSpeciesId={selectedSpeciesId}
+            />
+          </div>
+        )}
 
         <div className={currentView === 'forest' ? '' : 'hidden'}>
           <Suspense fallback={<ViewFallback />}>
