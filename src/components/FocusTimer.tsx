@@ -103,7 +103,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
   const growthProgress =
     timerStatus === 'idle'
       ? 1.0
-      : Math.max(0.05, Math.min(1.0, (targetMinutes * 60 - remainingSeconds) / (targetMinutes * 60)));
+      : Math.min(1.0, Math.max(0.01, (targetMinutes * 60 - remainingSeconds) / (targetMinutes * 60)));
 
   // Sync default duration when settings change while idle
   useEffect(() => {

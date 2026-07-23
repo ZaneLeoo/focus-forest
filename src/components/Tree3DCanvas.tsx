@@ -29,6 +29,8 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const prevProgressRef = useRef<number>(progress);
+  const lastSpeciesRef = useRef<TreeSpeciesId | null>(null);
+  const lastPhaseRef = useRef<'sprout' | 'grown'>('grown');
 
   // 1. Scene initialization (runs once)
   useEffect(() => {
@@ -186,9 +188,14 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
     };
   }, []);
 
-  // 2. Tree model rebuild — fires on mount and when species/completion changes
+  // 2. Tree model rebuild — on mount, species change, completion change, or sprout→grown transition
   useEffect(() => {
     if (!treeGroupRef.current || !foliageGroupRef.current || !sceneRef.current) return;
+
+    const phase: 'sprout' | 'grown' = (progress < 0.12 && !isCompleted) ? 'sprout' : 'grown';
+    if (phase === lastPhaseRef.current && speciesId === lastSpeciesRef.current) return;
+    lastPhaseRef.current = phase;
+    lastSpeciesRef.current = speciesId;
 
     buildDetailedTreeModel(treeGroupRef.current, foliageGroupRef.current, speciesId, progress, isCompleted);
 
@@ -200,7 +207,7 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
       particlesRef.current = particles;
       sceneRef.current.add(particles);
     }
-  }, [speciesId, isCompleted]);
+  }, [speciesId, progress, isCompleted]);
 
   // 3. Update autoRotate
   useEffect(() => {
