@@ -19,9 +19,9 @@ import { GardenerProfileModal } from './components/GardenerProfileModal';
 import { LoginView } from './components/LoginView';
 
 // Lazy-loaded views — only downloaded when user navigates to them
-const ForestView = lazy(() => import('./components/ForestView'));
-const StatsView = lazy(() => import('./components/StatsView'));
-const SettingsView = lazy(() => import('./components/SettingsView'));
+const ForestView = lazy(() => import('./components/ForestView').then(m => ({ default: m.ForestView })));
+const StatsView = lazy(() => import('./components/StatsView').then(m => ({ default: m.StatsView })));
+const SettingsView = lazy(() => import('./components/SettingsView').then(m => ({ default: m.SettingsView })));
 
 const ViewFallback = () => (
   <div className="flex items-center justify-center min-h-[50vh]">
@@ -168,31 +168,29 @@ export default function App() {
           </div>
         )}
 
-        <div className={currentView === 'forest' ? '' : 'hidden'}>
+        {currentView === 'forest' && (
           <Suspense fallback={<ViewFallback />}>
-            {currentView === 'forest' && <ForestView />}
+            <ForestView />
           </Suspense>
-        </div>
+        )}
 
-        <div className={currentView === 'stats' ? '' : 'hidden'}>
+        {currentView === 'stats' && (
           <Suspense fallback={<ViewFallback />}>
-            {currentView === 'stats' && <StatsView trees={trees} />}
+            <StatsView trees={trees} />
           </Suspense>
-        </div>
+        )}
 
-        <div className={currentView === 'settings' ? '' : 'hidden'}>
+        {currentView === 'settings' && (
           <Suspense fallback={<ViewFallback />}>
-            {currentView === 'settings' && (
-              <SettingsView
-                settings={settings}
-                onUpdateSettings={handleUpdateSettings}
-                onExportCSV={handleExportCSV}
-                onResetData={handleResetData}
-                onOpenAmbientModal={() => setShowAmbientModal(true)}
-              />
-            )}
+            <SettingsView
+              settings={settings}
+              onUpdateSettings={handleUpdateSettings}
+              onExportCSV={handleExportCSV}
+              onResetData={handleResetData}
+              onOpenAmbientModal={() => setShowAmbientModal(true)}
+            />
           </Suspense>
-        </div>
+        )}
       </main>
 
       {/* Bottom Navigation for Mobile */}
