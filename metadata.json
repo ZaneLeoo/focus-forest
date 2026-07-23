@@ -1,0 +1,6 @@
+{
+  "name": "Focus Forest",
+  "description": "A biophilic gamified focus timer application with forest visualization, session analytics, sound generator, and persistent storage.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

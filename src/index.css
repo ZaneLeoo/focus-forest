@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* Force class-based dark mode (never use OS prefers-color-scheme) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-primary: #125238;
+  --color-primary-fixed: #b1f0cd;
+  --color-primary-fixed-dim: #96d4b2;
+  --color-primary-container: #2f6b4f;
+  --color-on-primary: #ffffff;
+  --color-on-primary-container: #aae9c6;
+  --color-secondary: #346942;
+  --color-secondary-container: #b1ebba;
+  --color-on-secondary-container: #376c45;
+  --color-secondary-fixed: #b6f0bf;
+  --color-tertiary: #5f4400;
+  --color-tertiary-container: #7a5b16;
+  --color-tertiary-fixed: #ffdea5;
+  --color-on-tertiary-fixed: #261900;
+  --color-soil: #8B6B4A;
+  --color-moss: #9CAD7B;
+  --color-background: #fbf9f0;
+  --color-surface: #FFFEF8;
+  --color-surface-container: #f0eee5;
+  --color-surface-container-low: #f6f4eb;
+  --color-surface-container-high: #eae8df;
+  --color-surface-container-highest: #e4e3da;
+  --color-surface-variant: #e4e3da;
+  --color-text-main: #26332C;
+  --color-text-muted: #768078;
+  --color-outline: #707972;
+  --color-outline-variant: #c0c9c1;
+  --color-forest-dark: #1A3026;
+  --color-error: #ba1a1a;
+
+  --radius-natural: 20px;
+
+  --font-manrope: 'Manrope', sans-serif;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #fbf9f0;
+  color: #26332C;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark body, body.dark {
+  background-color: #1a1c1a;
+  color: #e2e3de;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.material-symbols-outlined.fill-1 {
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+.grain-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 99;
+  opacity: 0.03;
+  background-image: url("https://www.transparenttextures.com/patterns/felt.png");
+}
+
+.organic-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.tree-entry {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tree-entry:hover {
+  transform: scale(1.08) translateY(-4px);
+}
+
+.timer-ring {
+  transition: stroke-dashoffset 0.5s linear;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #c0c9c1;
+  border-radius: 10px;
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 40px -10px rgba(47, 107, 79, 0.08);
+}
+
+/* Range input styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 6px;
+  cursor: pointer;
+  background: #DDEBDF;
+  border-radius: 3px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background: #125238;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -7px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+

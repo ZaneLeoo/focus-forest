@@ -1,0 +1,60 @@
+import { TreeSpecies, CategoryOption } from '../types';
+
+export const TREE_SPECIES: TreeSpecies[] = [
+  {
+    id: 'oak',
+    name: '橡树',
+    icon: 'park',
+    color: '#125238',
+    bgColor: 'bg-primary/10',
+    description: '庄重耐立的橡树，象征沉沉专注与坚韧。',
+    rarity: 'common',
+    minLevelRequired: 1,
+    minDuration: 15,
+    isRare: false,
+  },
+  {
+    id: 'pine',
+    name: '松树',
+    icon: 'forest',
+    color: '#346942',
+    bgColor: 'bg-secondary/10',
+    description: '四季常青的松树，带给你如山间清风般的平静。',
+    rarity: 'common',
+    minLevelRequired: 1,
+    minDuration: 20,
+    isRare: false,
+  },
+  {
+    id: 'sakura',
+    name: '樱花',
+    icon: 'local_florist',
+    color: '#e91e63',
+    bgColor: 'bg-[#fff0f3]',
+    bgClass: 'bg-[#fff0f3]',
+    description: '粉灿如霞的稀有樱花，为专注时光点缀浪漫色彩。',
+    rarity: 'rare',
+    minLevelRequired: 2,
+    minDuration: 45,
+    isRare: true,
+  },
+  {
+    id: 'ginkgo',
+    name: '银杏',
+    icon: 'nature',
+    color: '#d97706',
+    bgColor: 'bg-amber-50',
+    description: '金黄的银杏叶如同扇子，蕴含着古老的时间能量。',
+    rarity: 'rare',
+    minLevelRequired: 2,
+    minDuration: 30,
+    isRare: true,
+  },
+];
+
+export const CATEGORIES: CategoryOption[] = [
+  { name: '工作', color: '#125238', bgColor: 'bg-primary-container/10 text-primary', icon: 'work' },
+  { name: '学习', color: '#346942', bgColor: 'bg-secondary-container/30 text-secondary', icon: 'school' },
+  { name: '阅读', color: '#7a5b16', bgColor: 'bg-tertiary-fixed/40 text-tertiary', icon: 'menu_book' },
+  { name: '专注', color: '#d97706', bgColor: 'bg-amber-100 text-amber-800', icon: 'psychology' },
+];
