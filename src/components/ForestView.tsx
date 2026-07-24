@@ -4,7 +4,7 @@ import { TREE_SPECIES } from '../constants/trees';
 import { FocusSession } from '../types';
 
 export const ForestView: React.FC = () => {
-  const { sessions, setNavTab, deleteSession, timer, user } = useFocus();
+  const { sessions, setNavTab, deleteSession, user } = useFocus();
   const [timeTab, setTimeTab] = useState<'day' | 'week' | 'month' | 'all'>('week');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSession, setSelectedSession] = useState<FocusSession | null>(null);
@@ -125,21 +125,6 @@ export const ForestView: React.FC = () => {
 
         {/* Tree Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {/* Active Growing Tree Slot */}
-          {timer.status === 'running' && (
-            <div className="flex flex-col items-center group cursor-pointer" onClick={() => setNavTab('focus')}>
-              <div className="relative w-full aspect-square bg-[#FFFEF8]/60 dark:bg-zinc-800/60 rounded-2xl border-2 border-dashed border-[#125238] flex flex-col items-center justify-center group-hover:bg-[#125238]/5 transition-colors">
-                <span className="material-symbols-outlined text-[#125238] dark:text-[#96d4b2] text-5xl animate-pulse">
-                  psychology
-                </span>
-                <div className="absolute bottom-2 bg-[#125238] text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                  正在成长...
-                </div>
-              </div>
-              <span className="text-xs text-[#768078] dark:text-zinc-400 mt-2 font-bold">正在专注</span>
-            </div>
-          )}
-
           {/* Planted Trees List */}
           {filteredSessions.map(session => {
             const species = TREE_SPECIES.find(t => t.id === session.treeId) || TREE_SPECIES[0];

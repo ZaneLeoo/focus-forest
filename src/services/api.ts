@@ -47,7 +47,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return data as T;
 }
 
-function getStoredToken(): string | null {
+export function getStoredToken(): string | null {
   return localStorage.getItem('focus_forest_token');
 }
 

@@ -30,12 +30,16 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const prevProgressRef = useRef<number>(progress);
   const lastSpeciesRef = useRef<TreeSpeciesId | null>(null);
-  const lastPhaseRef = useRef<'sprout' | 'grown'>('grown');
+  const lastPhaseRef = useRef<'sprout' | 'grown' | null>(null);
 
   // 1. Scene initialization (runs once)
   useEffect(() => {
     const container = mountRef.current;
     if (!container) return;
+
+    // Reset tracking refs so tree model always builds on first mount
+    lastSpeciesRef.current = null;
+    lastPhaseRef.current = null;
 
     const width = container.clientWidth || 240;
     const height = container.clientHeight || 240;

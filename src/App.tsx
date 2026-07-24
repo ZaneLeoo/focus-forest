@@ -1,13 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { useFocus } from './context/FocusContext';
-import { ViewMode, PlantedTree, UserSettings, NavTab } from './types';
-import {
-  getStoredTrees,
-  saveTree,
-  deleteTree,
-  clearAllTrees,
-} from './utils/storage';
-import { deleteSessionRemote } from './services/api';
+import { ViewMode, FocusSession, NavTab } from './types';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { BottomNav } from './components/BottomNav';
@@ -18,7 +11,6 @@ import { AmbientSoundModal } from './components/AmbientSoundModal';
 import { GardenerProfileModal } from './components/GardenerProfileModal';
 import { LoginView } from './components/LoginView';
 
-// Lazy-loaded views — only downloaded when user navigates to them
 const ForestView = lazy(() => import('./components/ForestView').then(m => ({ default: m.ForestView })));
 const StatsView = lazy(() => import('./components/StatsView').then(m => ({ default: m.StatsView })));
 const SettingsView = lazy(() => import('./components/SettingsView').then(m => ({ default: m.SettingsView })));
@@ -30,15 +22,29 @@ const ViewFallback = () => (
 );
 
 export default function App() {
-  const { isLoggedIn, userName, userAvatar, setUserAvatar, login, logout, selectedSpeciesId, setSelectedSpeciesId, navTab, setNavTab, settings, updateSettings, sessions } = useFocus();
+  const {
+    isLoggedIn,
+    userName,
+    userAvatar,
+    setUserAvatar,
+    login,
+    logout,
+    selectedSpeciesId,
+    setSelectedSpeciesId,
+    navTab,
+    setNavTab,
+    settings,
+    updateSettings,
+    sessions,
+    addSession,
+    deleteSession,
+    syncing,
+  } = useFocus();
 
   const [currentView, setCurrentView] = useState<ViewMode>(() => {
-    const tab = navTab;
-    return tab === 'focus' ? 'timer' : tab;
+    return navTab === 'focus' ? 'timer' : navTab;
   });
-  const [trees, setTrees] = useState<PlantedTree[]>(() => getStoredTrees());
-
-  const [selectedTree, setSelectedTree] = useState<PlantedTree | null>(null);
+  const [selectedSession, setSelectedSession] = useState<FocusSession | null>(null);
   const [showAmbientModal, setShowAmbientModal] = useState(false);
   const [showSpeciesModal, setShowSpeciesModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
@@ -57,74 +63,71 @@ export default function App() {
     }
   }, [navTab]);
 
-  // Handle login handler
+  // Handle login
   const handleLogin = (name: string, avatar: string) => {
     login(name, avatar);
-    clearAllTrees();
-    setTrees([]);
   };
 
-  // Handle logout handler
+  // Handle logout
   const handleLogout = () => {
     logout();
   };
 
-  // Today's trees count
-  const todayTreesCount = trees.filter(t => {
-    const d = new Date(t.timestamp);
+  // Today's completed sessions count
+  const todayTreesCount = sessions.filter(s => {
+    if (!s.completed) return false;
+    const d = new Date(s.createdAt);
     const today = new Date();
-    return (
-      d.getFullYear() === today.getFullYear() &&
-      d.getMonth() === today.getMonth() &&
-      d.getDate() === today.getDate()
-    );
+    return d.toDateString() === today.toDateString();
   }).length;
 
-  // Tree completion handler
-  const handleTreeCompleted = (newTreeData: Omit<PlantedTree, 'id' | 'plantedAt' | 'timestamp'>) => {
-    const created = saveTree(newTreeData);
-    setTrees(prev => [created, ...prev]);
+  // Total trees (completed sessions)
+  const totalTreesPlanted = sessions.filter(s => s.completed).length;
+
+  // Delete session
+  const handleDeleteSession = (id: string) => {
+    deleteSession(id);
   };
 
-  // Tree delete handler
-  const handleDeleteTree = (id: string) => {
-    deleteTree(id);
-    setTrees(prev => prev.filter(t => t.id !== id));
-  };
-
-  // Update settings handler
-  const handleUpdateSettings = (newSettings: UserSettings) => {
+  // Update settings
+  const handleUpdateSettings = (newSettings: Partial<typeof settings>) => {
     updateSettings(newSettings);
   };
 
-  // Reset both local + server
-  const handleResetData = () => {
-    clearAllTrees();
-    setTrees([]);
-    sessions.forEach(s => deleteSessionRemote(s.id).catch(() => {}));
-  };
-
-  // Export CSV handler
+  // Export CSV
   const handleExportCSV = () => {
-    if (trees.length === 0) {
+    const completedSessions = sessions.filter(s => s.completed);
+    if (completedSessions.length === 0) {
       alert('暂无更多种植记录可导出');
       return;
     }
 
     const headers = ['ID,树种,分类,时长(分钟),稀有,状态,种植时间\n'];
-    const rows = trees.map(t =>
-      `"${t.id}","${t.name}","${t.category}",${t.durationMinutes},"${t.isRare ? '是' : '否'}","${t.status}","${t.plantedAt}"\n`
+    const rows = completedSessions.map(s =>
+      `"${s.id}","${s.treeName}","${s.category}",${s.durationMinutes},"${s.isRare ? '是' : '否'}","${s.completed ? '已完成' : '未完成'}","${new Date(s.createdAt).toLocaleString('zh-CN')}"\n`
     );
 
     const blob = new Blob([headers.concat(rows).join('')], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `FocusForest_Trees_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `FocusForest_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
+
+  // Show loading while syncing from server
+  if (syncing) {
+    return (
+      <div className="min-h-screen w-full bg-[#fbf9f0] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-3 border-[#125238] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm text-[#768078] font-medium">正在同步数据...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!isLoggedIn) {
     return <LoginView onLogin={handleLogin} />;
@@ -134,36 +137,33 @@ export default function App() {
     <div className="min-h-screen bg-[#fbf9f0] text-[#1b1c17] custom-scrollbar overflow-x-hidden relative">
       <div className="grain-overlay"></div>
 
-      {/* Top Header */}
       <Header
         currentView={currentView}
         onSelectView={handleSelectView}
-        totalTreesCount={trees.length}
+        totalTreesCount={totalTreesPlanted}
         userName={userName}
         userAvatar={userAvatar}
         onOpenProfileModal={() => setShowProfileModal(true)}
       />
 
-      {/* Sidebar for Desktop */}
       <Sidebar
         currentView={currentView}
         onSelectView={handleSelectView}
-        treesCount={trees.length}
+        treesCount={totalTreesPlanted}
         onUnlockSpeciesClick={() => setShowSpeciesModal(true)}
       />
 
-      {/* Main Content Area — all views kept mounted, hidden via CSS */}
       <main className="px-4 md:pl-72 md:pr-8 transition-all pt-16 pb-20 md:pt-24 md:pb-12 min-h-screen">
         {currentView === 'timer' && (
           <div className="min-h-[calc(100vh-8rem)] min-h-[calc(100svh-8rem)] flex flex-col items-center justify-start md:justify-center pt-2 pb-4">
             <FocusTimer
               settings={settings}
               onUpdateSettings={handleUpdateSettings}
-              onTreeCompleted={handleTreeCompleted}
               todayTreesCount={todayTreesCount}
               onOpenAmbientModal={() => setShowAmbientModal(true)}
               onOpenSpeciesModal={() => setShowSpeciesModal(true)}
               selectedSpeciesId={selectedSpeciesId}
+              addSession={addSession}
             />
           </div>
         )}
@@ -176,7 +176,7 @@ export default function App() {
 
         {currentView === 'stats' && (
           <Suspense fallback={<ViewFallback />}>
-            <StatsView trees={trees} />
+            <StatsView sessions={sessions} />
           </Suspense>
         )}
 
@@ -186,21 +186,21 @@ export default function App() {
               settings={settings}
               onUpdateSettings={handleUpdateSettings}
               onExportCSV={handleExportCSV}
-              onResetData={handleResetData}
+              onResetData={() => {
+                sessions.forEach(s => deleteSession(s.id));
+              }}
               onOpenAmbientModal={() => setShowAmbientModal(true)}
             />
           </Suspense>
         )}
       </main>
 
-      {/* Bottom Navigation for Mobile */}
       <BottomNav currentView={currentView} onSelectView={handleSelectView} />
 
-      {/* Modals */}
       <TreeDetailModal
-        tree={selectedTree}
-        onClose={() => setSelectedTree(null)}
-        onDeleteTree={handleDeleteTree}
+        session={selectedSession}
+        onClose={() => setSelectedSession(null)}
+        onDeleteSession={handleDeleteSession}
       />
 
       <SpeciesPickerModal
@@ -224,7 +224,7 @@ export default function App() {
         userName={userName}
         userAvatar={userAvatar}
         onChangeAvatar={setUserAvatar}
-        totalTreesCount={trees.length}
+        totalTreesCount={totalTreesPlanted}
         onSelectView={handleSelectView}
         onLogout={handleLogout}
       />

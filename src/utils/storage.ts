@@ -1,4 +1,4 @@
-import { FocusSession, UserProfile, AppSettings, PlantedTree } from '../types';
+import { FocusSession, UserProfile, AppSettings } from '../types';
 
 const STORAGE_KEYS = {
   SESSIONS: 'focus_forest_sessions_v1',
@@ -146,41 +146,6 @@ export function exportDataAsJSON(): void {
   a.click();
   URL.revokeObjectURL(url);
 }
-
-// --- PlantedTree (Forest Grid) Storage ---
-
-export const getStoredTrees = (): PlantedTree[] => {
-  try {
-    const raw = localStorage.getItem('focus_forest_trees_v1');
-    if (!raw) return [];
-    return JSON.parse(raw);
-  } catch {
-    return [];
-  }
-};
-
-export const saveTree = (tree: Omit<PlantedTree, 'id' | 'plantedAt' | 'timestamp'>): PlantedTree => {
-  const trees = getStoredTrees();
-  const newTree: PlantedTree = {
-    ...tree,
-    id: `tree-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-    plantedAt: new Date().toISOString(),
-    timestamp: Date.now(),
-  };
-  const updated = [newTree, ...trees];
-  safeSetItem('focus_forest_trees_v1', JSON.stringify(updated));
-  return newTree;
-};
-
-export const deleteTree = (id: string): void => {
-  const trees = getStoredTrees();
-  const filtered = trees.filter(t => t.id !== id);
-  safeSetItem('focus_forest_trees_v1', JSON.stringify(filtered));
-};
-
-export const clearAllTrees = (): void => {
-  localStorage.removeItem('focus_forest_trees_v1');
-};
 
 export function exportSessionsAsCSV(): void {
   const sessions = loadSessions();

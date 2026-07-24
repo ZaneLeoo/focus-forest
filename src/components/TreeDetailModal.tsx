@@ -1,21 +1,21 @@
 import React from 'react';
-import { PlantedTree, TreeSpeciesId } from '../types';
+import { FocusSession, TreeSpeciesId } from '../types';
 import { Tree3DCanvas } from './Tree3DCanvas';
 
 interface TreeDetailModalProps {
-  tree: PlantedTree | null;
+  session: FocusSession | null;
   onClose: () => void;
-  onDeleteTree?: (id: string) => void;
+  onDeleteSession?: (id: string) => void;
 }
 
 export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
-  tree,
+  session,
   onClose,
-  onDeleteTree,
+  onDeleteSession,
 }) => {
-  if (!tree) return null;
+  if (!session) return null;
 
-  const dateFormatted = new Date(tree.timestamp).toLocaleString('zh-CN', {
+  const dateFormatted = new Date(session.createdAt).toLocaleString('zh-CN', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -23,7 +23,7 @@ export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
     minute: '2-digit',
   });
 
-  const speciesId: TreeSpeciesId = (tree.speciesId as TreeSpeciesId) || 'oak';
+  const speciesId: TreeSpeciesId = (session.treeId as TreeSpeciesId) || 'oak';
 
   return (
     <div
@@ -49,7 +49,7 @@ export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
 
         {/* Tree 3D Interactive Card Preview */}
         <div className="flex flex-col items-center justify-center p-4 bg-[#f0eee5] rounded-2xl mb-5 relative overflow-hidden">
-          {tree.isRare && (
+          {session.isRare && (
             <div className="absolute top-3 right-3 bg-[#ffdea5] text-[#261900] text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
               <span className="material-symbols-outlined text-xs fill-1">star</span>
               稀有
@@ -59,14 +59,14 @@ export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
           <div className="w-40 h-40 flex items-center justify-center my-1">
             <Tree3DCanvas
               speciesId={speciesId}
-              progress={tree.status === 'completed' ? 1.0 : 0.3}
-              isCompleted={tree.status === 'completed'}
+              progress={session.completed ? 1.0 : 0.3}
+              isCompleted={session.completed}
             />
           </div>
 
-          <h4 className="font-bold text-xl text-[#26332C] mt-1">{tree.name}</h4>
+          <h4 className="font-bold text-xl text-[#26332C] mt-1">{session.treeName}</h4>
           <span className="text-xs text-[#768078] mt-0.5">
-            {tree.durationMinutes} 分钟 • {tree.category}
+            {session.durationMinutes} 分钟 • {session.category}
           </span>
         </div>
 
@@ -78,23 +78,29 @@ export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
           <div className="flex justify-between py-1.5 border-b border-[#c0c9c1]/20">
             <span className="text-[#768078]">专注分类</span>
             <span className="font-semibold text-[#125238] bg-[#b1ebba]/40 px-2 py-0.5 rounded-md">
-              {tree.category}
+              {session.category}
             </span>
           </div>
           <div className="flex justify-between py-1.5 border-b border-[#c0c9c1]/20">
             <span className="text-[#768078]">状态</span>
             <span className="font-semibold text-[#125238]">
-              {tree.status === 'completed' ? '成功长成 🌱' : '已中止 🍂'}
+              {session.completed ? '成功长成 🌱' : '已中止 🍂'}
             </span>
           </div>
+          {session.note && (
+            <div className="pt-2">
+              <span className="text-[#768078]">备注:</span>
+              <p className="mt-1 p-2 bg-[#f0eee5] rounded-xl italic">{session.note}</p>
+            </div>
+          )}
         </div>
 
         <div className="flex gap-3">
-          {onDeleteTree && (
+          {onDeleteSession && (
             <button
               onClick={() => {
                 if (confirm('确定要从森林中移除这棵树吗？')) {
-                  onDeleteTree(tree.id);
+                  onDeleteSession(session.id);
                   onClose();
                 }
               }}

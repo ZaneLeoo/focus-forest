@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import confetti from 'canvas-confetti';
-import { PlantedTree, TreeSpeciesId, UserSettings } from '../types';
+import { TreeSpeciesId, UserSettings, FocusSession } from '../types';
 import { TREE_SPECIES, CATEGORIES } from '../constants/trees';
 import { audioSynth } from '../services/audioSynthesizer';
 import { Tree3DCanvas } from './Tree3DCanvas';
@@ -8,20 +8,20 @@ import { Tree3DCanvas } from './Tree3DCanvas';
 interface FocusTimerProps {
   settings: UserSettings;
   onUpdateSettings: (settings: UserSettings) => void;
-  onTreeCompleted: (tree: Omit<PlantedTree, 'id' | 'plantedAt' | 'timestamp'>) => void;
   todayTreesCount: number;
   onOpenAmbientModal: () => void;
   onOpenSpeciesModal: () => void;
   selectedSpeciesId: TreeSpeciesId;
+  addSession: (session: Omit<FocusSession, 'id' | 'createdAt'>) => void;
 }
 
 export const FocusTimer: React.FC<FocusTimerProps> = ({
   settings,
-  onTreeCompleted,
   todayTreesCount,
   onOpenAmbientModal,
   onOpenSpeciesModal,
   selectedSpeciesId,
+  addSession,
 }) => {
   const [targetMinutes, setTargetMinutes] = useState<number>(settings.focusDuration);
   const [remainingSeconds, setRemainingSeconds] = useState<number>(settings.focusDuration * 60);
@@ -160,15 +160,14 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
           origin: { y: 0.6 },
         });
 
-        onTreeCompleted({
-          speciesId: activeSpecies.id,
-          name: activeSpecies.name,
-          icon: activeSpecies.icon,
-          color: activeSpecies.color,
-          durationMinutes: targetMinutes,
+        addSession({
+          treeId: activeSpecies.id,
+          treeName: activeSpecies.name,
           category: selectedCategory,
-          isRare: activeSpecies.isRare,
-          status: 'completed',
+          durationMinutes: targetMinutes,
+          completed: true,
+          isRare: activeSpecies.rarity === 'rare' || activeSpecies.rarity === 'legendary',
+          note: `完成${selectedCategory}专注`,
         });
 
         if (settings.autoStartBreak) {
@@ -227,15 +226,14 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
     if (actualMinutes >= 1) {
       audioSynth.playChime();
       confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 } });
-      onTreeCompleted({
-        speciesId: activeSpecies.id,
-        name: activeSpecies.name,
-        icon: activeSpecies.icon,
-        color: activeSpecies.color,
-        durationMinutes: actualMinutes,
+      addSession({
+        treeId: activeSpecies.id,
+        treeName: activeSpecies.name,
         category: selectedCategory,
-        isRare: activeSpecies.isRare,
-        status: 'completed',
+        durationMinutes: actualMinutes,
+        completed: true,
+        isRare: activeSpecies.rarity === 'rare' || activeSpecies.rarity === 'legendary',
+        note: `完成${selectedCategory}专注`,
       });
     }
     setTimerStatus('idle');

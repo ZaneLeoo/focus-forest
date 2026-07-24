@@ -10,34 +10,34 @@ import {
   Pie,
   Cell,
 } from 'recharts';
-import { PlantedTree } from '../types';
+import { FocusSession } from '../types';
 
 interface StatsViewProps {
-  trees: PlantedTree[];
+  sessions: FocusSession[];
 }
 
-export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
+export const StatsView: React.FC<StatsViewProps> = ({ sessions }) => {
   const [timeRange, setTimeRange] = useState<'7days' | '30days'>('7days');
 
   // Key metrics calculations
   const totalMinutes = useMemo(() => {
-    return trees.reduce((acc, t) => acc + t.durationMinutes, 0);
-  }, [trees]);
+    return sessions.reduce((acc, s) => acc + s.durationMinutes, 0);
+  }, [sessions]);
 
   const totalHours = Math.floor(totalMinutes / 60);
   const remainingMins = totalMinutes % 60;
   const totalTimeStr = `${totalHours}h ${remainingMins}m`;
 
   const avgMinutes = useMemo(() => {
-    if (trees.length === 0) return 0;
-    return Math.round(totalMinutes / trees.length);
-  }, [trees, totalMinutes]);
+    if (sessions.length === 0) return 0;
+    return Math.round(totalMinutes / sessions.length);
+  }, [sessions, totalMinutes]);
 
   const completionRate = useMemo(() => {
-    if (trees.length === 0) return 100;
-    const completed = trees.filter(t => t.status === 'completed').length;
-    return Math.round((completed / trees.length) * 100);
-  }, [trees]);
+    if (sessions.length === 0) return 100;
+    const completed = sessions.filter(s => s.completed).length;
+    return Math.round((completed / sessions.length) * 100);
+  }, [sessions]);
 
   // Focus time trend data (past 7 days or 30 days)
   const trendData = useMemo(() => {
@@ -50,14 +50,14 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
       const dayLabel = d.toLocaleDateString('zh-CN', { weekday: 'short', month: 'numeric', day: 'numeric' });
 
       // Sum minutes for this date
-      const minutesOnDay = trees.reduce((acc, t) => {
-        const tDate = new Date(t.timestamp);
+      const minutesOnDay = sessions.reduce((acc, s) => {
+        const sDate = new Date(s.createdAt);
         if (
-          tDate.getFullYear() === d.getFullYear() &&
-          tDate.getMonth() === d.getMonth() &&
-          tDate.getDate() === d.getDate()
+          sDate.getFullYear() === d.getFullYear() &&
+          sDate.getMonth() === d.getMonth() &&
+          sDate.getDate() === d.getDate()
         ) {
-          return acc + t.durationMinutes;
+          return acc + s.durationMinutes;
         }
         return acc;
       }, 0);
@@ -69,13 +69,13 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
     }
 
     return result;
-  }, [trees, timeRange]);
+  }, [sessions, timeRange]);
 
   // Category breakdown chart data
   const categoryData = useMemo(() => {
     const map: Record<string, number> = {};
-    trees.forEach(t => {
-      map[t.category] = (map[t.category] || 0) + t.durationMinutes;
+    sessions.forEach(s => {
+      map[s.category] = (map[s.category] || 0) + s.durationMinutes;
     });
 
     const COLORS: Record<string, string> = {
@@ -92,14 +92,14 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
       value: map[cat],
       color: COLORS[cat] || '#2f6b4f',
     }));
-  }, [trees]);
+  }, [sessions]);
 
   // 26-week activity heatmap generator (optimized: precompute date->count map)
   const heatmapColumns = useMemo(() => {
     // Build lookup map: dateKey -> count in a single pass
     const countMap = new Map<string, number>();
-    trees.forEach(t => {
-      const d = new Date(t.timestamp);
+    sessions.forEach(s => {
+      const d = new Date(s.createdAt);
       const key = `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
       countMap.set(key, (countMap.get(key) || 0) + 1);
     });
@@ -130,7 +130,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
       cols.push(daysInWeek);
     }
     return cols;
-  }, [trees]);
+  }, [sessions]);
 
   return (
     <div className="w-full max-w-6xl mx-auto pb-12">
@@ -141,7 +141,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
             <h2 className="font-bold text-2xl sm:text-3xl text-[#26332C] mb-1">我的成长旅程</h2>
             <p className="text-xs text-[#768078]">每一分钟的专注，都在森林里种下一棵树。</p>
           </div>
-          {trees.length > 0 && (
+          {sessions.length > 0 && (
             <div className="flex items-center gap-2 bg-[#2f6b4f]/10 px-3 py-2 rounded-xl border border-[#2f6b4f]/20">
               <span className="material-symbols-outlined text-[#125238] text-lg">auto_awesome</span>
               <p className="text-xs font-bold text-[#125238]">
@@ -244,7 +244,7 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
                 </PieChart>
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="font-bold text-xl text-[#125238]">{trees.length}</span>
+                <span className="font-bold text-xl text-[#125238]">{sessions.length}</span>
                 <span className="text-[10px] text-[#768078] font-bold">棵树</span>
               </div>
             </div>
@@ -308,11 +308,11 @@ export const StatsView: React.FC<StatsViewProps> = ({ trees }) => {
             </div>
           </div>
 
-          {trees.length > 0 && (
+          {sessions.length > 0 && (
             <div className="mt-6 flex items-center gap-2 p-3 bg-[#b1f0cd]/20 rounded-xl border border-[#b1f0cd]">
               <span className="material-symbols-outlined text-[#125238] text-lg">energy_savings_leaf</span>
               <p className="text-xs text-[#105137] font-medium">
-                已种下 <strong>{trees.length}</strong> 棵树，继续加油！
+                已种下 <strong>{sessions.length}</strong> 棵树，继续加油！
               </p>
             </div>
           )}
