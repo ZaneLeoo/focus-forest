@@ -167,12 +167,36 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     return d.toDateString() === today.toDateString();
   }).length;
 
-  // Always use light theme
+  // Apply theme from settings
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.remove('dark');
-    root.classList.add('light');
-  }, []);
+    const theme = settings.theme;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    } else if (theme === 'light') {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    } else {
+      // System preference
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      root.classList.toggle('dark', prefersDark);
+      root.classList.toggle('light', !prefersDark);
+    }
+  }, [settings.theme]);
+
+  // Listen for system theme changes
+  useEffect(() => {
+    if (settings.theme !== 'system') return;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => {
+      const root = document.documentElement;
+      root.classList.toggle('dark', e.matches);
+      root.classList.toggle('light', !e.matches);
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, [settings.theme]);
 
   // Handle ambient sound playback
   const toggleAmbientSound = useCallback((type?: AppSettings['ambientSound']) => {

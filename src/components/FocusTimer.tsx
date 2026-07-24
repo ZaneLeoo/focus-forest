@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { TreeSpeciesId, UserSettings, FocusSession } from '../types';
 import { TREE_SPECIES, CATEGORIES } from '../constants/trees';
@@ -170,6 +170,8 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
           note: `完成${selectedCategory}专注`,
         });
 
+        notifyComplete(activeSpecies.name, targetMinutes);
+
         if (settings.autoStartBreak) {
           startTimeRef.current = Date.now();
           totalSecondsRef.current = settings.breakDuration * 60;
@@ -196,6 +198,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
     timerModeRef.current = 'focus';
     setRemainingSeconds(targetMinutes * 60);
     setTimerStatus('running');
+    requestNotification();
     if (settings.ambientSound !== 'none') {
       audioSynth.playSound(settings.ambientSound, settings.ambientVolume);
     }
@@ -235,6 +238,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
         isRare: activeSpecies.rarity === 'rare' || activeSpecies.rarity === 'legendary',
         note: `完成${selectedCategory}专注`,
       });
+      notifyComplete(activeSpecies.name, actualMinutes);
     }
     setTimerStatus('idle');
     setRemainingSeconds(targetMinutes * 60);
@@ -260,6 +264,25 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
       setShowCustomTimeModal(false);
     }
   };
+
+  // Browser notification on focus complete
+  const notifyComplete = useCallback((treeName: string, minutes: number) => {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'granted') {
+      new Notification('🌳 专注完成！', {
+        body: `成功种下一棵${treeName}，专注了 ${minutes} 分钟`,
+        icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌳</text></svg>',
+      });
+    }
+  }, []);
+
+  // Request notification permission on first start
+  const requestNotification = useCallback(() => {
+    if (!('Notification' in window)) return;
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   // Greeting based on current time
   const getGreeting = () => {

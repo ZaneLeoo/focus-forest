@@ -46,13 +46,42 @@ function toSafeUser(u: db.StoredUser) {
 }
 
 // ---- Middleware ----
-app.use((_req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
+const ALLOWED_ORIGINS = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'http://8.134.77.221',
+  'http://focus-forest.example.com',
+];
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
   res.header('Access-Control-Allow-Headers', 'Authorization, Content-Type');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  if (_req.method === 'OPTIONS') { res.sendStatus(200); return; }
+  if (req.method === 'OPTIONS') { res.sendStatus(200); return; }
   next();
 });
+
+// Rate limiting
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+function rateLimit(req: express.Request, res: express.Response, next: express.NextFunction) {
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (entry && now < entry.resetAt) {
+    if (entry.count >= 60) {
+      res.status(429).json({ error: '请求太频繁，请稍后再试' });
+      return;
+    }
+    entry.count++;
+  } else {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + 60000 });
+  }
+  next();
+}
+app.use(rateLimit);
 app.use(express.json());
 
 function authMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
