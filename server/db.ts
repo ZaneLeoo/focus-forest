@@ -219,9 +219,17 @@ export function upsertSettings(settings: StoredSettings): StoredSettings {
 export function deleteUserById(id: string): boolean {
   db.run('DELETE FROM sessions WHERE user_id = ?', [id]);
   db.run('DELETE FROM settings WHERE user_id = ?', [id]);
-  const result = db.run('DELETE FROM users WHERE id = ?', [id]);
+  db.run('DELETE FROM users WHERE id = ?', [id]);
   saveToDisk();
-  return result.changes > 0;
+  return true;
+}
+
+export function updatePassword(id: string, hash: string, salt: string): boolean {
+  const user = findUserById(id);
+  if (!user) return false;
+  db.run('UPDATE users SET password_hash = ?, salt = ? WHERE id = ?', [hash, salt, id]);
+  saveToDisk();
+  return true;
 }
 
 // ---- Rankings ----

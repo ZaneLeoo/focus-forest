@@ -173,6 +173,15 @@ app.delete('/api/users/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
+app.post('/api/users/:id/reset-password', authMiddleware, (req, res) => {
+  const { password } = req.body;
+  if (!password || password.length < 4) { res.status(400).json({ error: '密码至少4位' }); return; }
+  const { hash, salt } = hashPassword(password);
+  const ok = db.updatePassword(req.params.id, hash, salt);
+  if (!ok) { res.status(404).json({ error: '用户不存在' }); return; }
+  res.json({ success: true });
+});
+
 // ===== RANKINGS ROUTE =====
 app.get('/api/rankings', (_req, res) => {
   const rankings = db.getRankings();
