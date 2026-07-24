@@ -138,8 +138,13 @@ export const RankingView: React.FC = () => {
 
                 {/* Avatar + Name */}
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="w-10 h-10 rounded-full bg-[#b1ebba]/40 flex items-center justify-center text-xl shrink-0">
-                    {entry.avatar}
+                  <div className="relative shrink-0">
+                    {isFirst && entry.totalSessions > 0 && (
+                      <span className="absolute -top-3 -right-1 text-sm z-10">👑</span>
+                    )}
+                    <div className="w-10 h-10 rounded-full bg-[#b1ebba]/40 flex items-center justify-center text-xl">
+                      {entry.avatar}
+                    </div>
                   </div>
                   <div className="min-w-0">
                     <p className="font-bold text-sm text-[#26332C] truncate">{entry.username}</p>
