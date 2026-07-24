@@ -4,7 +4,7 @@ import { TREE_SPECIES } from '../constants/trees';
 import { FocusSession } from '../types';
 
 export const ForestView: React.FC = () => {
-  const { sessions, setNavTab, deleteSession, user } = useFocus();
+  const { sessions, setNavTab, deleteSession } = useFocus();
   const [timeTab, setTimeTab] = useState<'day' | 'week' | 'month' | 'all'>('week');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSession, setSelectedSession] = useState<FocusSession | null>(null);
@@ -33,10 +33,62 @@ export const ForestView: React.FC = () => {
     });
   }, [sessions, timeTab, searchQuery]);
 
+  const completedSessions = useMemo(
+    () => sessions.filter(s => s.completed),
+    [sessions]
+  );
+
   const totalTreesCount = filteredSessions.filter(s => s.completed).length;
   const rareTreesCount = filteredSessions.filter(s => s.completed && s.isRare).length;
   const totalDurationMinutes = filteredSessions.reduce((acc, s) => acc + (s.completed ? s.durationMinutes : 0), 0);
-  const carbonOffsetKg = (totalDurationMinutes * 0.0053).toFixed(1);
+
+  // Calculate actual streak from session data
+  const streakDays = useMemo(() => {
+    if (completedSessions.length === 0) return 0;
+    // Collect unique dates (YYYY-MM-DD) with completed sessions
+    const dates = new Set<string>();
+    completedSessions.forEach(s => {
+      dates.add(new Date(s.createdAt).toISOString().slice(0, 10));
+    });
+    // Count consecutive days ending at today
+    let streak = 0;
+    const today = new Date();
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(today.getTime() - i * 86400000);
+      const key = d.toISOString().slice(0, 10);
+      if (dates.has(key)) {
+        streak++;
+      } else if (i === 0) {
+        // Today not yet completed, skip and continue checking
+        continue;
+      } else {
+        break;
+      }
+    }
+    return streak;
+  }, [completedSessions]);
+
+  // Weekly stats
+  const weeklyStats = useMemo(() => {
+    const now = Date.now();
+    const weekStart = now - 7 * 86400000;
+    const weekSessions = sessions.filter(s => s.completed && s.createdAt > weekStart);
+    const weekMinutes = weekSessions.reduce((acc, s) => acc + s.durationMinutes, 0);
+    const weekCount = weekSessions.length;
+
+    // Favorite category this week
+    const catCount: Record<string, number> = {};
+    weekSessions.forEach(s => {
+      catCount[s.category] = (catCount[s.category] || 0) + 1;
+    });
+    let favCategory = '';
+    let maxCount = 0;
+    Object.entries(catCount).forEach(([cat, count]) => {
+      if (count > maxCount) { maxCount = count; favCategory = cat; }
+    });
+
+    return { weekMinutes, weekCount, favCategory };
+  }, [sessions]);
 
   return (
     <div className="max-w-6xl mx-auto px-4 pb-24 pt-4">
@@ -207,9 +259,9 @@ export const ForestView: React.FC = () => {
         <h3 className="font-bold text-xl text-[#26332C] dark:text-zinc-100 mb-4">成长亮点</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-[#FFFEF8] dark:bg-zinc-800 p-6 rounded-3xl border border-outline-variant/20 shadow-sm">
-            <p className="text-[#768078] dark:text-zinc-400 text-xs font-bold mb-2">最长连续天数</p>
+            <p className="text-[#768078] dark:text-zinc-400 text-xs font-bold mb-2">当前连续天数</p>
             <div className="flex items-baseline gap-2">
-              <span className="text-4xl font-extrabold text-[#125238] dark:text-[#96d4b2]">{user.streakDays}</span>
+              <span className="text-4xl font-extrabold text-[#125238] dark:text-[#96d4b2]">{streakDays}</span>
               <span className="text-xs font-bold text-[#26332C] dark:text-zinc-300">天</span>
             </div>
             <div className="mt-4 flex gap-1">
@@ -217,7 +269,9 @@ export const ForestView: React.FC = () => {
                 <div
                   key={i}
                   className={`h-1.5 flex-1 rounded-full ${
-                    i < user.streakDays % 7 ? 'bg-[#125238] dark:bg-[#96d4b2]' : 'bg-[#c0c9c1]/30 dark:bg-zinc-700'
+                    i < streakDays % 7 || (streakDays % 7 === 0 && streakDays > 0 && i < 7)
+                      ? 'bg-[#125238] dark:bg-[#96d4b2]'
+                      : 'bg-[#c0c9c1]/30 dark:bg-zinc-700'
                   }`}
                 />
               ))}
@@ -226,21 +280,38 @@ export const ForestView: React.FC = () => {
 
           <div className="bg-[#FFFEF8] dark:bg-zinc-800 p-6 rounded-3xl border border-outline-variant/20 shadow-sm md:col-span-2 relative overflow-hidden">
             <div className="relative z-10">
-              <p className="text-[#768078] dark:text-zinc-400 text-xs font-bold mb-2">每周碳抵消 (模拟计算)</p>
-              <div className="flex items-center gap-4">
-                <span className="text-4xl font-extrabold text-[#346942] dark:text-[#96d4b2]">{carbonOffsetKg} kg</span>
-                <div className="flex -space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-[#b1f0cd] flex items-center justify-center border-2 border-white">
-                    <span className="material-symbols-outlined text-xs text-[#125238]">eco</span>
+              <p className="text-[#768078] dark:text-zinc-400 text-xs font-bold mb-2">本周专注统计</p>
+              {weeklyStats.weekCount > 0 ? (
+                <>
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl font-extrabold text-[#346942] dark:text-[#96d4b2]">{weeklyStats.weekCount}</span>
+                    <span className="text-xs font-bold text-[#26332C] dark:text-zinc-300">次专注</span>
+                    <div className="flex -space-x-2">
+                      <div className="w-8 h-8 rounded-full bg-[#b1f0cd] flex items-center justify-center border-2 border-white">
+                        <span className="material-symbols-outlined text-xs text-[#125238]">schedule</span>
+                      </div>
+                      <div className="w-8 h-8 rounded-full bg-[#b6f0bf] flex items-center justify-center border-2 border-white">
+                        <span className="material-symbols-outlined text-xs text-[#346942]">local_fire_department</span>
+                      </div>
+                    </div>
                   </div>
-                  <div className="w-8 h-8 rounded-full bg-[#b6f0bf] flex items-center justify-center border-2 border-white">
-                    <span className="material-symbols-outlined text-xs text-[#346942]">park</span>
+                  <p className="text-xs text-[#768078] dark:text-zinc-400 mt-2 leading-relaxed">
+                    本周累计专注 <strong className="text-[#125238]">{Math.floor(weeklyStats.weekMinutes / 60)}h {weeklyStats.weekMinutes % 60}m</strong>
+                    {weeklyStats.favCategory && <>，最常投入 <strong className="text-[#125238]">{weeklyStats.favCategory}</strong></>}。
+                    继续保持！
+                  </p>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center gap-4">
+                    <span className="text-4xl font-extrabold text-[#c0c9c1] dark:text-zinc-600">0</span>
+                    <span className="text-xs font-bold text-[#768078] dark:text-zinc-400">次专注</span>
                   </div>
-                </div>
-              </div>
-              <p className="text-xs text-[#768078] dark:text-zinc-400 mt-2 leading-relaxed">
-                你的专注节省了极大的精力消耗，相当于为森林小屋提供 4 小时的绿色洁净能源。
-              </p>
+                  <p className="text-xs text-[#768078] dark:text-zinc-400 mt-2 leading-relaxed">
+                    本周还没有专注记录，现在就开始种下第一棵树吧 🌱
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
