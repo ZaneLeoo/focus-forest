@@ -166,6 +166,13 @@ function getDefaultSettings(userId: string): db.StoredSettings {
   };
 }
 
+// ===== USER MANAGEMENT =====
+app.delete('/api/users/:id', authMiddleware, (req, res) => {
+  const ok = db.deleteUserById(req.params.id);
+  if (!ok) { res.status(404).json({ error: '用户不存在' }); return; }
+  res.json({ success: true });
+});
+
 // ===== RANKINGS ROUTE =====
 app.get('/api/rankings', (_req, res) => {
   const rankings = db.getRankings();

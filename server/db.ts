@@ -215,6 +215,15 @@ export function upsertSettings(settings: StoredSettings): StoredSettings {
   return settings;
 }
 
+// ---- User deletion ----
+export function deleteUserById(id: string): boolean {
+  db.run('DELETE FROM sessions WHERE user_id = ?', [id]);
+  db.run('DELETE FROM settings WHERE user_id = ?', [id]);
+  const result = db.run('DELETE FROM users WHERE id = ?', [id]);
+  saveToDisk();
+  return result.changes > 0;
+}
+
 // ---- Rankings ----
 export interface RankingEntry {
   userId: string;
