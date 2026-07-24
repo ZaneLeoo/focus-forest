@@ -1,9 +1,0 @@
-[TAILING] Tailing last 5 lines for [focus-forest] process (change the value with --lines option)
-/root/.pm2/logs/focus-forest-error.log last 5 lines:
-/root/.pm2/logs/focus-forest-out.log last 5 lines:
-0|focus-fo | 🌳 Focus Forest server → http://localhost:3001
-0|focus-fo | 📂 SQLite database ready
-0|focus-fo | 🌳 Focus Forest server → http://localhost:3001
-0|focus-fo | 📂 SQLite database ready
-0|focus-fo | 🌳 Focus Forest server → http://localhost:3001
-

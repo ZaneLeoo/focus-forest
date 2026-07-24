@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import confetti from 'canvas-confetti';
 import { RankingEntry } from '../types';
 import { fetchRankings } from '../services/api';
 
@@ -6,6 +7,7 @@ export const RankingView: React.FC = () => {
   const [rankings, setRankings] = useState<RankingEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState<'minutes' | 'sessions'>('minutes');
+  const [celebrating, setCelebrating] = useState<string | null>(null);
 
   useEffect(() => {
     fetchRankings()
@@ -23,6 +25,36 @@ export const RankingView: React.FC = () => {
     }
     return list;
   }, [rankings, sortBy]);
+
+  const celebrate = (userId: string) => {
+    if (celebrating === userId) return;
+    setCelebrating(userId);
+    confetti({
+      particleCount: 100,
+      spread: 80,
+      origin: { y: 0.5, x: 0.5 },
+      colors: ['#FFD700', '#FFA500', '#125238', '#b1f0cd', '#f472b6'],
+      shapes: ['star', 'circle'],
+      ticks: 150,
+    });
+    setTimeout(() => {
+      confetti({
+        particleCount: 40,
+        spread: 60,
+        origin: { y: 0.3, x: 0.3 },
+        colors: ['#FFD700', '#FFA500'],
+        shapes: ['star'],
+      });
+      confetti({
+        particleCount: 40,
+        spread: 60,
+        origin: { y: 0.3, x: 0.7 },
+        colors: ['#FFD700', '#FFA500'],
+        shapes: ['star'],
+      });
+    }, 200);
+    setTimeout(() => setCelebrating(null), 2000);
+  };
 
   const getMedal = (index: number) => {
     if (index === 0) return { emoji: '🥇', bg: 'bg-amber-100 border-amber-300' };
@@ -84,15 +116,21 @@ export const RankingView: React.FC = () => {
             const hours = Math.floor(entry.totalMinutes / 60);
             const mins = entry.totalMinutes % 60;
 
+            const isFirst = index === 0;
             return (
               <div
                 key={entry.userId}
-                className={`flex items-center gap-4 p-4 rounded-2xl border shadow-sm transition-all ${medal.bg}`}
+                onClick={() => isFirst && entry.totalSessions > 0 && celebrate(entry.userId)}
+                className={`flex items-center gap-4 p-4 rounded-2xl border shadow-sm transition-all ${medal.bg} ${
+                  isFirst && entry.totalSessions > 0
+                    ? 'cursor-pointer hover:scale-[1.02] hover:shadow-lg active:scale-95'
+                    : ''
+                } ${celebrating === entry.userId ? 'ring-4 ring-amber-400 scale-[1.03] shadow-2xl' : ''}`}
               >
                 {/* Rank */}
-                <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                <div className={`w-10 h-10 flex items-center justify-center shrink-0 ${celebrating === entry.userId ? 'animate-bounce' : ''}`}>
                   {medal.emoji ? (
-                    <span className="text-2xl">{medal.emoji}</span>
+                    <span className={`text-2xl ${celebrating === entry.userId ? 'animate-ping' : ''}`}>{medal.emoji}</span>
                   ) : (
                     <span className="text-sm font-bold text-[#768078]">{index + 1}</span>
                   )}
