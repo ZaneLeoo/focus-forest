@@ -124,7 +124,7 @@ app.post('/api/sessions', authMiddleware, (req, res) => {
     completed: completed !== false,
     isRare: isRare || false,
     note: note || '',
-    createdAt: Date.now(),
+    createdAt: req.body.createdAt || Date.now(),
   });
   res.status(201).json({ session });
 });
