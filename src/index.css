@@ -129,22 +129,91 @@ body {
   border-color: rgb(249 115 22 / 0.3);
 }
 
-/* Dark mode: green brand text */
-.dark .text-\[\#125238\] {
-  color: var(--green-brand);
-}
-
+/* Dark mode: green brand overrides */
+.dark .text-\[\#125238\],
 .dark .text-\[\#346942\] {
-  color: #86d4a2;
+  color: #96d4b2;
 }
 
-/* Dark mode: sakura tree card background */
+.dark .text-\[\#376c45\],
+.dark .text-\[\#105137\] {
+  color: #a0d8b4;
+}
+
+.dark .bg-\[\#125238\] {
+  background-color: #2f6b4f;
+}
+
+.dark .bg-\[\#346942\],
+.dark .bg-\[\#2f6b4f\] {
+  background-color: #1e4531;
+}
+
+.dark .bg-\[\#b1ebba\] {
+  background-color: rgb(150 212 178 / 0.25);
+}
+
+.dark .bg-\[\#b1ebba\]\/30,
+.dark .bg-\[\#b1ebba\]\/40,
+.dark .bg-\[\#b1ebba\]\/60 {
+  background-color: rgb(150 212 178 / 0.18);
+}
+
+.dark .bg-\[\#b1f0cd\]\/20,
+.dark .bg-\[\#b1f0cd\]\/25,
+.dark .bg-\[\#b1f0cd\]\/30 {
+  background-color: rgb(150 212 178 / 0.12);
+}
+
+.dark .bg-\[\#2f6b4f\]\/10 {
+  background-color: rgb(150 212 178 / 0.1);
+}
+
+.dark .border-\[\#125238\] {
+  border-color: #479068;
+}
+
+.dark .border-\[\#2f6b4f\]\/20 {
+  border-color: rgb(150 212 178 / 0.12);
+}
+
+.dark .border-\[\#b1f0cd\] {
+  border-color: rgb(150 212 178 / 0.25);
+}
+
+.dark .shadow-\[\#125238\]\/20 {
+  --tw-shadow-color: rgb(0 0 0 / 0.3);
+}
+
+.dark .hover\:bg-\[\#125238\]\/90:hover {
+  background-color: #3d7a5a;
+}
+
+.dark .hover\:bg-\[\#b1f0cd\]\/40:hover,
+.dark .hover\:bg-\[\#b1f0cd\]\/60:hover {
+  background-color: rgb(150 212 178 / 0.22);
+}
+
+.dark .hover\:ring-\[\#125238\]\/30:hover {
+  --tw-ring-color: rgb(150 212 178 / 0.3);
+}
+
+/* Dark mode: sakura/ginkgo card backgrounds */
 .dark .bg-\[\#fff0f3\] {
   background-color: rgb(233 30 99 / 0.12);
 }
 
 .dark .bg-amber-50 {
   background-color: rgb(217 119 6 / 0.12);
+}
+
+/* Dark mode: decorative blobs */
+.dark .bg-\[\#b1ebba\]\/25 {
+  background-color: rgb(150 212 178 / 0.08);
+}
+
+.dark .bg-\[\#ffdea5\]\/20 {
+  background-color: rgb(255 222 165 / 0.08);
 }
 
 .material-symbols-outlined {

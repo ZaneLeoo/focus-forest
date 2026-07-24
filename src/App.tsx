@@ -10,6 +10,7 @@ import { SpeciesPickerModal } from './components/SpeciesPickerModal';
 import { AmbientSoundModal } from './components/AmbientSoundModal';
 import { GardenerProfileModal } from './components/GardenerProfileModal';
 import { LoginView } from './components/LoginView';
+import { ChangelogModal } from './components/ChangelogModal';
 
 const ForestView = lazy(() => import('./components/ForestView').then(m => ({ default: m.ForestView })));
 const StatsView = lazy(() => import('./components/StatsView').then(m => ({ default: m.StatsView })));
@@ -241,6 +242,8 @@ export default function App() {
         onSelectView={handleSelectView}
         onLogout={handleLogout}
       />
+
+      <ChangelogModal />
     </div>
   );
 }
