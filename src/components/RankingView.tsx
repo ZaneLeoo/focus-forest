@@ -140,7 +140,9 @@ export const RankingView: React.FC = () => {
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="relative shrink-0">
                     {isFirst && entry.totalSessions > 0 && (
-                      <span className="absolute -top-3 -right-1 text-sm z-10">👑</span>
+                      <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-amber-500 z-10 material-symbols-outlined text-lg fill-1">
+                        crown
+                      </span>
                     )}
                     <div className="w-10 h-10 rounded-full bg-[#b1ebba]/40 flex items-center justify-center text-xl">
                       {entry.avatar}
