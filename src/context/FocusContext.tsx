@@ -45,12 +45,11 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const [settings, setSettings] = useState<AppSettings>(loadSettings);
   const [sessions, setSessions] = useState<FocusSession[]>(loadSessions);
   const [currentSoundType, setCurrentSoundType] = useState<string>('none');
-  const [syncing, setSyncing] = useState(false);
+  const hasStoredToken = !!getStoredToken();
+  const [syncing, setSyncing] = useState(hasStoredToken);
 
-  // Auth state - derived from stored API token
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return !!getStoredToken();
-  });
+  // Auth state - only true after verified by server
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState<string>(() => {
     const stored = getStoredUser();
     return stored?.username || '森林园丁';
@@ -87,6 +86,9 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       .catch(() => {
         // Server unreachable - stay logged in with cached data
         console.warn('Server unreachable, using cached data');
+        if (getStoredToken()) {
+          setIsLoggedIn(true);
+        }
       })
       .finally(() => setSyncing(false));
   }, []);
