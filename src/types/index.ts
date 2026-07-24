@@ -1,5 +1,5 @@
-export type NavTab = 'focus' | 'forest' | 'stats' | 'settings';
-export type ViewMode = NavTab | 'timer' | 'forest' | 'stats' | 'settings';
+export type NavTab = 'focus' | 'forest' | 'stats' | 'ranking' | 'settings';
+export type ViewMode = NavTab | 'timer' | 'forest' | 'stats' | 'ranking' | 'settings';
 
 export type TreeSpeciesId = 'oak' | 'pine' | 'sakura' | 'ginkgo';
 
@@ -76,6 +76,14 @@ export interface AppSettings {
   ambientVolume: number; // 0 to 1
   animationIntensity: 0 | 1 | 2 | 'none' | 'reduced' | 'natural';
   soundNotifications: boolean;
+}
+
+export interface RankingEntry {
+  userId: string;
+  username: string;
+  avatar: string;
+  totalSessions: number;
+  totalMinutes: number;
 }
 
 export type UserSettings = AppSettings;

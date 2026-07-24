@@ -46,6 +46,18 @@ export const BottomNav: React.FC<BottomNavProps> = React.memo(({ currentView, on
       </button>
 
       <button
+        onClick={() => onSelectView('ranking')}
+        className={`flex flex-col items-center justify-center transition-all ${
+          currentView === 'ranking'
+            ? 'bg-[#2f6b4f] text-white rounded-full px-5 py-1 scale-95 shadow-sm font-bold'
+            : 'text-[#768078] hover:text-[#125238] active:scale-90'
+        }`}
+      >
+        <span className={`material-symbols-outlined ${currentView === 'ranking' ? 'fill-1' : ''}`}>leaderboard</span>
+        <span className="text-[11px] font-medium">排行</span>
+      </button>
+
+      <button
         onClick={() => onSelectView('settings')}
         className={`flex flex-col items-center justify-center transition-all ${
           currentView === 'settings'

@@ -60,6 +60,18 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
         </button>
 
         <button
+          onClick={() => onSelectView('ranking')}
+          className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
+            currentView === 'ranking'
+              ? 'bg-[#b1ebba] text-[#376c45] font-bold shadow-xs translate-x-1'
+              : 'text-[#404943] hover:bg-[#e4e3da]/50'
+          }`}
+        >
+          <span className={`material-symbols-outlined ${currentView === 'ranking' ? 'fill-1' : ''}`}>leaderboard</span>
+          <span>排行</span>
+        </button>
+
+        <button
           onClick={() => onSelectView('settings')}
           className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
             currentView === 'settings'

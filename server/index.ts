@@ -166,6 +166,12 @@ function getDefaultSettings(userId: string): db.StoredSettings {
   };
 }
 
+// ===== RANKINGS ROUTE =====
+app.get('/api/rankings', (_req, res) => {
+  const rankings = db.getRankings();
+  res.json({ rankings });
+});
+
 // ===== STATIC (production) =====
 if (process.env.NODE_ENV === 'production') {
   const distPath = join(__dirname, '..', 'dist');

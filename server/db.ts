@@ -215,6 +215,35 @@ export function upsertSettings(settings: StoredSettings): StoredSettings {
   return settings;
 }
 
+// ---- Rankings ----
+export interface RankingEntry {
+  userId: string;
+  username: string;
+  avatar: string;
+  totalSessions: number;
+  totalMinutes: number;
+}
+
+export function getRankings(): RankingEntry[] {
+  const result = db.exec(`
+    SELECT u.id, u.username, u.avatar,
+      COUNT(CASE WHEN s.completed = 1 THEN 1 END) as total_sessions,
+      COALESCE(SUM(CASE WHEN s.completed = 1 THEN s.duration_minutes ELSE 0 END), 0) as total_minutes
+    FROM users u
+    LEFT JOIN sessions s ON u.id = s.user_id
+    GROUP BY u.id
+    ORDER BY total_minutes DESC, total_sessions DESC
+  `);
+  if (!result.length) return [];
+  return result[0].values.map(row => ({
+    userId: row[0] as string,
+    username: row[1] as string,
+    avatar: row[2] as string,
+    totalSessions: row[3] as number,
+    totalMinutes: row[4] as number,
+  }));
+}
+
 function rowToSettings(row: any[]): StoredSettings {
   return {
     userId: row[0], focusDuration: row[1], breakDuration: row[2], shortBreakDuration: row[3],

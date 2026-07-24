@@ -1,5 +1,7 @@
 const API_BASE = import.meta.env.PROD ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:3001');
 
+import type { RankingEntry } from '../types';
+
 // ---- Types ----
 export interface SafeUser {
   id: string;
@@ -120,6 +122,12 @@ export async function createSession(session: {
 
 export async function deleteSessionRemote(id: string): Promise<void> {
   await request('/api/sessions/' + id, { method: 'DELETE' });
+}
+
+// ---- Rankings ----
+export async function fetchRankings(): Promise<RankingEntry[]> {
+  const data = await request<{ rankings: RankingEntry[] }>('/api/rankings');
+  return data.rankings;
 }
 
 // ---- Settings ----

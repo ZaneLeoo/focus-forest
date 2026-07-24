@@ -13,6 +13,7 @@ import { LoginView } from './components/LoginView';
 
 const ForestView = lazy(() => import('./components/ForestView').then(m => ({ default: m.ForestView })));
 const StatsView = lazy(() => import('./components/StatsView').then(m => ({ default: m.StatsView })));
+const RankingView = lazy(() => import('./components/RankingView').then(m => ({ default: m.RankingView })));
 const SettingsView = lazy(() => import('./components/SettingsView').then(m => ({ default: m.SettingsView })));
 
 const ViewFallback = () => (
@@ -177,6 +178,12 @@ export default function App() {
         {currentView === 'stats' && (
           <Suspense fallback={<ViewFallback />}>
             <StatsView sessions={sessions} />
+          </Suspense>
+        )}
+
+        {currentView === 'ranking' && (
+          <Suspense fallback={<ViewFallback />}>
+            <RankingView />
           </Suspense>
         )}
 
