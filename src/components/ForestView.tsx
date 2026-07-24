@@ -132,8 +132,8 @@ export const ForestView: React.FC = () => {
                 onClick={() => setTimeTab(tab.id as any)}
                 className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all ${
                   timeTab === tab.id
-                    ? 'bg-white dark:bg-zinc-700 shadow-md text-[#125238] dark:text-[#96d4b2]'
-                    : 'text-[#404943] dark:text-zinc-400 hover:text-[#125238]'
+                    ? 'bg-[var(--bg-surface)] dark:bg-zinc-700 shadow-md text-[#125238] dark:text-[#96d4b2]'
+                    : 'text-[var(--text-dim)] dark:text-zinc-400 hover:text-[#125238]'
                 }`}
               >
                 {tab.label}
@@ -146,7 +146,7 @@ export const ForestView: React.FC = () => {
       {/* Search & Filter Bar */}
       <section className="mb-8">
         <div className="relative max-w-xl">
-          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#707972]">
+          <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]">
             search
           </span>
           <input
@@ -325,7 +325,7 @@ export const ForestView: React.FC = () => {
               <h3 className="text-lg font-bold text-[#125238] dark:text-[#96d4b2]">专注树木详情</h3>
               <button
                 onClick={() => setSelectedSession(null)}
-                className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 flex items-center justify-center"
+                className="w-8 h-8 rounded-full bg-black/5 dark:bg-[var(--bg-surface)]/10 flex items-center justify-center"
               >
                 <span className="material-symbols-outlined text-sm">close</span>
               </button>

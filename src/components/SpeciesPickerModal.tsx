@@ -61,7 +61,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
                     onClose();
                   }}
                   className={`group relative p-3.5 rounded-2xl cursor-pointer border-2 transition-all duration-150 flex flex-col items-center text-center select-none ${
-                    species.bgClass || 'bg-white'
+                    species.bgClass || 'bg-[var(--bg-surface)]'
                   } ${
                     isSelected
                       ? 'border-[#125238] bg-[#125238]/5 ring-1 ring-[#125238]/30 shadow-xs'

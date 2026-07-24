@@ -84,8 +84,8 @@ export const RankingView: React.FC = () => {
           onClick={() => setSortBy('minutes')}
           className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all ${
             sortBy === 'minutes'
-              ? 'bg-white shadow-md text-[#125238]'
-              : 'text-[#404943] hover:text-[#125238]'
+              ? 'bg-[var(--bg-surface)] shadow-md text-[#125238]'
+              : 'text-[var(--text-dim)] hover:text-[#125238]'
           }`}
         >
           按总时长
@@ -94,8 +94,8 @@ export const RankingView: React.FC = () => {
           onClick={() => setSortBy('sessions')}
           className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all ${
             sortBy === 'sessions'
-              ? 'bg-white shadow-md text-[#125238]'
-              : 'text-[#404943] hover:text-[#125238]'
+              ? 'bg-[var(--bg-surface)] shadow-md text-[#125238]'
+              : 'text-[var(--text-dim)] hover:text-[#125238]'
           }`}
         >
           按种树数

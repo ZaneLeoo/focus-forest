@@ -55,7 +55,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             onClick={() => setMode('login')}
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
               mode === 'login'
-                ? 'bg-white text-[#125238] shadow-sm'
+                ? 'bg-[var(--bg-surface)] text-[#125238] shadow-sm'
                 : 'text-[var(--text-muted)] hover:text-[#125238]'
             }`}
           >
@@ -66,7 +66,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             onClick={() => setMode('register')}
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
               mode === 'register'
-                ? 'bg-white text-[#125238] shadow-sm'
+                ? 'bg-[var(--bg-surface)] text-[#125238] shadow-sm'
                 : 'text-[var(--text-muted)] hover:text-[#125238]'
             }`}
           >
@@ -85,7 +85,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               required
               minLength={2}
               maxLength={20}
-              className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-white focus:ring-2 focus:ring-[#125238] outline-none transition-all"
+              className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-[var(--bg-surface)] focus:ring-2 focus:ring-[#125238] outline-none transition-all"
             />
           </div>
 
@@ -98,7 +98,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               placeholder={mode === 'register' ? '设置密码（至少4位）' : '输入密码'}
               required
               minLength={4}
-              className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-white focus:ring-2 focus:ring-[#125238] outline-none transition-all"
+              className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-[var(--bg-surface)] focus:ring-2 focus:ring-[#125238] outline-none transition-all"
             />
           </div>
 

@@ -277,7 +277,7 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
       onTouchStart={() => setIsInteracting(true)}
       onTouchEnd={() => setIsInteracting(false)}
     >
-      <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[10px] text-[#2f6b4f]/70 bg-white/70 backdrop-blur-2xs px-2 py-0.5 rounded-full pointer-events-none opacity-0 hover:opacity-100 transition-opacity shadow-2xs">
+      <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[10px] text-[#2f6b4f]/70 bg-[var(--bg-surface)]/70 backdrop-blur-2xs px-2 py-0.5 rounded-full pointer-events-none opacity-0 hover:opacity-100 transition-opacity shadow-2xs">
         滑动 3D 树木 • 观察生长
       </div>
     </div>

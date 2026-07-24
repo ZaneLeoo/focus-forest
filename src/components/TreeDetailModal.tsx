@@ -70,7 +70,7 @@ export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
           </span>
         </div>
 
-        <div className="space-y-2.5 text-xs text-[#404943] mb-6">
+        <div className="space-y-2.5 text-xs text-[var(--text-dim)] mb-6">
           <div className="flex justify-between py-1.5 border-b border-[var(--border)]/20">
             <span className="text-[var(--text-muted)]">种植时间</span>
             <span className="font-semibold text-[var(--text-main)]">{dateFormatted}</span>

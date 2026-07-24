@@ -51,23 +51,57 @@ body {
   --bg-page: #1a1c1a;
   --bg-surface: #1e201e;
   --bg-surface2: #252725;
+  --bg-surface3: #2d302d;
   --text-main: #e2e3de;
   --text-muted: #9ca39e;
+  --text-dim: #7a807c;
   --border: #3a3d3a;
+  --green-brand: #96d4b2;
+  --green-deep: #2f6b4f;
 }
 
 .light {
   --bg-page: #fbf9f0;
   --bg-surface: #FFFEF8;
   --bg-surface2: #f0eee5;
+  --bg-surface3: #f6f4eb;
   --text-main: #26332C;
   --text-muted: #768078;
+  --text-dim: #505a53;
   --border: #c0c9c1;
+  --green-brand: #125238;
+  --green-deep: #2f6b4f;
 }
 
 body {
   background-color: var(--bg-page, #fbf9f0);
   color: var(--text-main, #26332C);
+}
+
+/* Dark mode: override white elements */
+.dark .bg-white,
+.dark .bg-white\/90,
+.dark .bg-white\/50 {
+  background-color: var(--bg-surface2);
+}
+
+.dark .hover\:bg-white\/50:hover {
+  background-color: rgb(255 255 255 / 0.1);
+}
+
+.dark .hover\:bg-black\/5:hover {
+  background-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .text-\[\#505a53\],
+.dark .text-\[\#404943\] {
+  color: var(--text-dim);
+}
+
+.dark .border-\[\#c0c9c1\]\/30,
+.dark .border-\[\#c0c9c1\]\/20,
+.dark .border-\[\#c0c9c1\]\/40 {
+  border-color: rgb(255 255 255 / 0.08);
 }
 
 .material-symbols-outlined {

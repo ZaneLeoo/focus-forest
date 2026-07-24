@@ -28,7 +28,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
             currentView === 'timer'
               ? 'bg-[#b1ebba] text-[#376c45] font-bold shadow-xs translate-x-1'
-              : 'text-[#404943] hover:bg-[#e4e3da]/50'
+              : 'text-[var(--text-dim)] hover:bg-[#e4e3da]/50'
           }`}
         >
           <span className={`material-symbols-outlined ${currentView === 'timer' ? 'fill-1' : ''}`}>timer</span>
@@ -40,7 +40,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
             currentView === 'forest'
               ? 'bg-[#b1ebba] text-[#376c45] font-bold shadow-xs translate-x-1'
-              : 'text-[#404943] hover:bg-[#e4e3da]/50'
+              : 'text-[var(--text-dim)] hover:bg-[#e4e3da]/50'
           }`}
         >
           <span className={`material-symbols-outlined ${currentView === 'forest' ? 'fill-1' : ''}`}>forest</span>
@@ -52,7 +52,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
             currentView === 'stats'
               ? 'bg-[#b1ebba] text-[#376c45] font-bold shadow-xs translate-x-1'
-              : 'text-[#404943] hover:bg-[#e4e3da]/50'
+              : 'text-[var(--text-dim)] hover:bg-[#e4e3da]/50'
           }`}
         >
           <span className={`material-symbols-outlined ${currentView === 'stats' ? 'fill-1' : ''}`}>bar_chart</span>
@@ -64,7 +64,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
             currentView === 'ranking'
               ? 'bg-[#b1ebba] text-[#376c45] font-bold shadow-xs translate-x-1'
-              : 'text-[#404943] hover:bg-[#e4e3da]/50'
+              : 'text-[var(--text-dim)] hover:bg-[#e4e3da]/50'
           }`}
         >
           <span className={`material-symbols-outlined ${currentView === 'ranking' ? 'fill-1' : ''}`}>leaderboard</span>
@@ -76,7 +76,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
           className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl font-semibold text-sm transition-all ${
             currentView === 'settings'
               ? 'bg-[#b1ebba] text-[#376c45] font-bold shadow-xs translate-x-1'
-              : 'text-[#404943] hover:bg-[#e4e3da]/50'
+              : 'text-[var(--text-dim)] hover:bg-[#e4e3da]/50'
           }`}
         >
           <span className={`material-symbols-outlined ${currentView === 'settings' ? 'fill-1' : ''}`}>settings</span>

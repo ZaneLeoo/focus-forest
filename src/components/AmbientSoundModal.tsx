@@ -69,7 +69,7 @@ export const AmbientSoundModal: React.FC<AmbientSoundModalProps> = ({
                 className={`p-3 sm:p-3.5 rounded-2xl cursor-pointer border-2 transition-all flex items-center gap-3.5 ${
                   isSelected
                     ? 'border-[#125238] bg-[#125238]/5 shadow-xs'
-                    : 'border-[var(--border)]/25 hover:border-[#125238]/40 bg-white'
+                    : 'border-[var(--border)]/25 hover:border-[#125238]/40 bg-[var(--bg-surface)]'
                 }`}
               >
                 <div

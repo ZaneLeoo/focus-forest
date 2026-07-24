@@ -338,7 +338,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
         {timerStatus === 'idle' && (
         <button
           onClick={() => setIs3DMode(!is3DMode)}
-          className="absolute -top-2 -right-2 z-20 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[var(--bg-surface)]/90 backdrop-blur-2xs border border-[var(--border)]/40 text-[#125238] hover:bg-white active:scale-95 shadow-2xs transition-all flex items-center gap-1 cursor-pointer"
+          className="absolute -top-2 -right-2 z-20 px-2.5 py-1 rounded-full text-[11px] font-bold bg-[var(--bg-surface)]/90 backdrop-blur-2xs border border-[var(--border)]/40 text-[#125238] hover:bg-[var(--bg-surface)] active:scale-95 shadow-2xs transition-all flex items-center gap-1 cursor-pointer"
           title="切换 3D/2D 模式"
         >
           <span className="material-symbols-outlined text-sm">{is3DMode ? '3d_rotation' : 'forest'}</span>
@@ -427,7 +427,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
             {/* Category Trigger */}
             <button
               onClick={() => setShowCategoryModal(true)}
-              className="py-2 px-2.5 rounded-xl bg-white border border-[var(--border)]/30 hover:border-[#125238]/40 active:scale-95 transition-all shadow-2xs flex items-center justify-between text-xs text-[var(--text-main)]"
+              className="py-2 px-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)]/30 hover:border-[#125238]/40 active:scale-95 transition-all shadow-2xs flex items-center justify-between text-xs text-[var(--text-main)]"
             >
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="material-symbols-outlined text-sm text-[#125238] shrink-0">
@@ -441,7 +441,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
             {/* Tree Species Trigger */}
             <button
               onClick={onOpenSpeciesModal}
-              className="py-2 px-2.5 rounded-xl bg-white border border-[var(--border)]/30 hover:border-[#125238]/40 active:scale-95 transition-all shadow-2xs flex items-center justify-between text-xs text-[var(--text-main)]"
+              className="py-2 px-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)]/30 hover:border-[#125238]/40 active:scale-95 transition-all shadow-2xs flex items-center justify-between text-xs text-[var(--text-main)]"
             >
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="material-symbols-outlined fill-1 text-sm shrink-0" style={{ color: activeSpecies.color }}>
@@ -455,7 +455,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
             {/* Ambient Sound Trigger */}
             <button
               onClick={onOpenAmbientModal}
-              className="py-2 px-2.5 rounded-xl bg-white border border-[var(--border)]/30 hover:border-[#125238]/40 active:scale-95 transition-all shadow-2xs flex items-center justify-between text-xs text-[var(--text-main)]"
+              className="py-2 px-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border)]/30 hover:border-[#125238]/40 active:scale-95 transition-all shadow-2xs flex items-center justify-between text-xs text-[var(--text-main)]"
             >
               <div className="flex items-center gap-1.5 min-w-0">
                 <span className="material-symbols-outlined text-sm text-[#125238] shrink-0">
@@ -477,8 +477,8 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
                 onClick={() => setPresetMinutes(mins)}
                 className={`flex-1 py-1.5 rounded-xl font-bold text-xs transition-all ${
                   targetMinutes === mins
-                    ? 'bg-white text-[#125238] shadow-2xs scale-[1.02]'
-                    : 'text-[#505a53] hover:text-[#125238]'
+                    ? 'bg-[var(--bg-surface)] text-[#125238] shadow-2xs scale-[1.02]'
+                    : 'text-[var(--text-dim)] hover:text-[#125238]'
                 }`}
               >
                 {mins}m
@@ -489,7 +489,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
                 setCustomInputMinutes(targetMinutes);
                 setShowCustomTimeModal(true);
               }}
-              className="w-8 h-7 flex items-center justify-center rounded-xl text-[#505a53] hover:text-[#125238] hover:bg-white/50 active:scale-95 transition-all"
+              className="w-8 h-7 flex items-center justify-center rounded-xl text-[var(--text-dim)] hover:text-[#125238] hover:bg-[var(--bg-surface)]/50 active:scale-95 transition-all"
               title="自定义"
             >
               <span className="material-symbols-outlined text-sm">edit</span>
@@ -636,7 +636,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
             <div className="flex gap-2">
               <button
                 onClick={() => setShowCustomTimeModal(false)}
-                className="flex-1 py-2.5 bg-[var(--bg-surface2)] text-[#404943] rounded-xl font-bold text-xs"
+                className="flex-1 py-2.5 bg-[var(--bg-surface2)] text-[var(--text-dim)] rounded-xl font-bold text-xs"
               >
                 取消
               </button>

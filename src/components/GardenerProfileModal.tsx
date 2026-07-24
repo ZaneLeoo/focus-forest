@@ -81,7 +81,7 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
                   className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-all cursor-pointer ${
                     userAvatar === emoji
                       ? 'bg-[#b1ebba]/60 ring-2 ring-[#125238] scale-110'
-                      : 'bg-white hover:bg-[#e4e2d7]'
+                      : 'bg-[var(--bg-surface)] hover:bg-[#e4e2d7]'
                   }`}
                 >
                   {emoji}
