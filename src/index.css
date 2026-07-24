@@ -216,6 +216,22 @@ body {
   background-color: rgb(255 222 165 / 0.08);
 }
 
+.dark .bg-\[\#ffdea5\] {
+  background-color: rgb(255 222 165 / 0.25);
+}
+
+.dark .text-\[\#261900\] {
+  color: #ffdea5;
+}
+
+.dark .text-\[\#1b1c17\] {
+  color: var(--text-main);
+}
+
+.dark .hover\:bg-\[\#0f4630\]:hover {
+  background-color: #3d7a5a;
+}
+
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   vertical-align: middle;

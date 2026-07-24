@@ -142,7 +142,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-page)] text-[#1b1c17] custom-scrollbar overflow-x-hidden relative">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[var(--text-main)] custom-scrollbar overflow-x-hidden relative">
       <div className="grain-overlay"></div>
 
       <Header
