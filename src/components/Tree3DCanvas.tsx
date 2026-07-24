@@ -57,7 +57,7 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1 : 2));
     renderer.shadowMap.enabled = !isMobile;
     if (!isMobile) {
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.shadowMap.type = THREE.PCFShadowMap;
     }
     rendererRef.current = renderer;
 
@@ -129,17 +129,22 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
     // Animation loop — pauses when page is hidden or container detached
     let animationFrameId: number;
     let isPageVisible = true;
-    const clock = new THREE.Clock();
+    let accumulatedTime = 0;
+    let prevTimestamp = performance.now();
 
     const handleVisibility = () => {
       isPageVisible = document.visibilityState === 'visible';
+      if (isPageVisible) prevTimestamp = performance.now();
     };
     document.addEventListener('visibilitychange', handleVisibility);
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
       if (!isPageVisible || !container.isConnected) return;
-      const elapsedTime = clock.getElapsedTime();
+      const now = performance.now();
+      accumulatedTime += (now - prevTimestamp) / 1000;
+      prevTimestamp = now;
+      const elapsedTime = accumulatedTime;
 
       if (foliageGroupRef.current) {
         foliageGroupRef.current.rotation.z = Math.sin(elapsedTime * 1.2) * 0.025;
