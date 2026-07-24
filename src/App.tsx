@@ -55,7 +55,13 @@ export default function App() {
     setCurrentView(view);
     const tab = view === 'timer' ? 'focus' : view;
     setNavTab(tab as NavTab);
+    window.scrollTo({ top: 0, behavior: 'auto' });
   };
+
+  // Scroll to top on login
+  useEffect(() => {
+    if (isLoggedIn) window.scrollTo({ top: 0, behavior: 'auto' });
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const mapped = navTab === 'focus' ? 'timer' : navTab;
@@ -121,10 +127,10 @@ export default function App() {
   // Show loading while syncing from server
   if (syncing) {
     return (
-      <div className="min-h-screen w-full bg-[#fbf9f0] flex items-center justify-center">
+      <div className="min-h-screen w-full bg-[var(--bg-page)] flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-3 border-[#125238] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm text-[#768078] font-medium">正在同步数据...</p>
+          <p className="text-sm text-[var(--text-muted)] font-medium">正在同步数据...</p>
         </div>
       </div>
     );
@@ -135,7 +141,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fbf9f0] text-[#1b1c17] custom-scrollbar overflow-x-hidden relative">
+    <div className="min-h-screen bg-[var(--bg-page)] text-[#1b1c17] custom-scrollbar overflow-x-hidden relative">
       <div className="grain-overlay"></div>
 
       <Header

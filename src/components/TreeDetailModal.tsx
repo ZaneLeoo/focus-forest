@@ -32,23 +32,23 @@ export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#FFFEF8] rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl border border-[#c0c9c1]/30 max-h-[85vh] my-auto flex flex-col relative animate-in zoom-in-95 duration-200 overflow-y-auto custom-scrollbar"
+        className="bg-[var(--bg-surface)] rounded-3xl p-5 sm:p-6 max-w-sm w-full shadow-2xl border border-[var(--border)]/30 max-h-[85vh] my-auto flex flex-col relative animate-in zoom-in-95 duration-200 overflow-y-auto custom-scrollbar"
       >
         <div className="flex justify-between items-center mb-3 shrink-0">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#125238] text-2xl">eco</span>
-            <h3 className="font-bold text-lg text-[#26332C]">3D 树木档案</h3>
+            <h3 className="font-bold text-lg text-[var(--text-main)]">3D 树木档案</h3>
           </div>
           <button
             onClick={onClose}
-            className="text-[#768078] hover:text-[#26332C] p-1.5 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
+            className="text-[var(--text-muted)] hover:text-[var(--text-main)] p-1.5 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
         {/* Tree 3D Interactive Card Preview */}
-        <div className="flex flex-col items-center justify-center p-4 bg-[#f0eee5] rounded-2xl mb-5 relative overflow-hidden">
+        <div className="flex flex-col items-center justify-center p-4 bg-[var(--bg-surface2)] rounded-2xl mb-5 relative overflow-hidden">
           {session.isRare && (
             <div className="absolute top-3 right-3 bg-[#ffdea5] text-[#261900] text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1 z-10">
               <span className="material-symbols-outlined text-xs fill-1">star</span>
@@ -64,33 +64,33 @@ export const TreeDetailModal: React.FC<TreeDetailModalProps> = ({
             />
           </div>
 
-          <h4 className="font-bold text-xl text-[#26332C] mt-1">{session.treeName}</h4>
-          <span className="text-xs text-[#768078] mt-0.5">
+          <h4 className="font-bold text-xl text-[var(--text-main)] mt-1">{session.treeName}</h4>
+          <span className="text-xs text-[var(--text-muted)] mt-0.5">
             {session.durationMinutes} 分钟 • {session.category}
           </span>
         </div>
 
         <div className="space-y-2.5 text-xs text-[#404943] mb-6">
-          <div className="flex justify-between py-1.5 border-b border-[#c0c9c1]/20">
-            <span className="text-[#768078]">种植时间</span>
-            <span className="font-semibold text-[#26332C]">{dateFormatted}</span>
+          <div className="flex justify-between py-1.5 border-b border-[var(--border)]/20">
+            <span className="text-[var(--text-muted)]">种植时间</span>
+            <span className="font-semibold text-[var(--text-main)]">{dateFormatted}</span>
           </div>
-          <div className="flex justify-between py-1.5 border-b border-[#c0c9c1]/20">
-            <span className="text-[#768078]">专注分类</span>
+          <div className="flex justify-between py-1.5 border-b border-[var(--border)]/20">
+            <span className="text-[var(--text-muted)]">专注分类</span>
             <span className="font-semibold text-[#125238] bg-[#b1ebba]/40 px-2 py-0.5 rounded-md">
               {session.category}
             </span>
           </div>
-          <div className="flex justify-between py-1.5 border-b border-[#c0c9c1]/20">
-            <span className="text-[#768078]">状态</span>
+          <div className="flex justify-between py-1.5 border-b border-[var(--border)]/20">
+            <span className="text-[var(--text-muted)]">状态</span>
             <span className="font-semibold text-[#125238]">
               {session.completed ? '成功长成 🌱' : '已中止 🍂'}
             </span>
           </div>
           {session.note && (
             <div className="pt-2">
-              <span className="text-[#768078]">备注:</span>
-              <p className="mt-1 p-2 bg-[#f0eee5] rounded-xl italic">{session.note}</p>
+              <span className="text-[var(--text-muted)]">备注:</span>
+              <p className="mt-1 p-2 bg-[var(--bg-surface2)] rounded-xl italic">{session.note}</p>
             </div>
           )}
         </div>

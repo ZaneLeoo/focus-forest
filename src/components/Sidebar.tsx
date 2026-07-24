@@ -17,7 +17,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
   onUnlockSpeciesClick,
 }) => {
   return (
-    <aside className="hidden md:flex flex-col fixed left-0 top-0 h-full z-40 bg-[#FFFEF8] w-64 rounded-r-2xl shadow-xl shadow-[#125238]/5 pt-24 pb-8 px-4 border-r border-[#c0c9c1]/20">
+    <aside className="hidden md:flex flex-col fixed left-0 top-0 h-full z-40 bg-[var(--bg-surface)] w-64 rounded-r-2xl shadow-xl shadow-[#125238]/5 pt-24 pb-8 px-4 border-r border-[var(--border)]/20">
       <div className="mb-8 px-4">
         <h2 className="text-[#125238] font-bold text-2xl tracking-tight">园丁</h2>
       </div>
@@ -90,7 +90,7 @@ export const Sidebar: React.FC<SidebarProps> = React.memo(({
 
           <span className="material-symbols-outlined text-[#d97706] text-sm">workspace_premium</span>
         </div>
-        <p className="text-[#768078] text-xs mb-3 leading-relaxed">
+        <p className="text-[var(--text-muted)] text-xs mb-3 leading-relaxed">
           解锁珍稀樱花树与金黄银杏树。
         </p>
         <button

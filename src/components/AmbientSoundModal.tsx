@@ -44,16 +44,16 @@ export const AmbientSoundModal: React.FC<AmbientSoundModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#FFFEF8] rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl border border-[#c0c9c1]/30 max-h-[85vh] my-auto flex flex-col relative animate-in zoom-in-95 duration-200"
+        className="bg-[var(--bg-surface)] rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl border border-[var(--border)]/30 max-h-[85vh] my-auto flex flex-col relative animate-in zoom-in-95 duration-200"
       >
         <div className="flex justify-between items-center mb-3 shrink-0">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#125238] text-2xl">graphic_eq</span>
-            <h3 className="font-bold text-lg sm:text-xl text-[#26332C]">环境音选择</h3>
+            <h3 className="font-bold text-lg sm:text-xl text-[var(--text-main)]">环境音选择</h3>
           </div>
           <button
             onClick={onClose}
-            className="text-[#768078] hover:text-[#26332C] p-1.5 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
+            className="text-[var(--text-muted)] hover:text-[var(--text-main)] p-1.5 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
@@ -69,19 +69,19 @@ export const AmbientSoundModal: React.FC<AmbientSoundModalProps> = ({
                 className={`p-3 sm:p-3.5 rounded-2xl cursor-pointer border-2 transition-all flex items-center gap-3.5 ${
                   isSelected
                     ? 'border-[#125238] bg-[#125238]/5 shadow-xs'
-                    : 'border-[#c0c9c1]/25 hover:border-[#125238]/40 bg-white'
+                    : 'border-[var(--border)]/25 hover:border-[#125238]/40 bg-white'
                 }`}
               >
                 <div
                   className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 ${
-                    isSelected ? 'bg-[#125238] text-white' : 'bg-[#f0eee5] text-[#768078]'
+                    isSelected ? 'bg-[#125238] text-white' : 'bg-[var(--bg-surface2)] text-[var(--text-muted)]'
                   }`}
                 >
                   <span className="material-symbols-outlined text-lg sm:text-xl">{opt.icon}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-center gap-2">
-                    <p className={`font-bold text-xs sm:text-sm truncate ${isSelected ? 'text-[#125238]' : 'text-[#26332C]'}`}>
+                    <p className={`font-bold text-xs sm:text-sm truncate ${isSelected ? 'text-[#125238]' : 'text-[var(--text-main)]'}`}>
                       {opt.label}
                     </p>
                     {isSelected && (
@@ -90,7 +90,7 @@ export const AmbientSoundModal: React.FC<AmbientSoundModalProps> = ({
                       </span>
                     )}
                   </div>
-                  <p className="text-[11px] text-[#768078] mt-0.5 truncate">{opt.desc}</p>
+                  <p className="text-[11px] text-[var(--text-muted)] mt-0.5 truncate">{opt.desc}</p>
                 </div>
               </div>
             );
@@ -98,8 +98,8 @@ export const AmbientSoundModal: React.FC<AmbientSoundModalProps> = ({
         </div>
 
         {settings.ambientSound !== 'none' && (
-          <div className="p-3 bg-[#f6f4eb] rounded-2xl mb-3 shrink-0 border border-[#c0c9c1]/20">
-            <div className="flex justify-between items-center mb-1.5 text-xs font-bold text-[#26332C]">
+          <div className="p-3 bg-[var(--bg-surface2)] rounded-2xl mb-3 shrink-0 border border-[var(--border)]/20">
+            <div className="flex justify-between items-center mb-1.5 text-xs font-bold text-[var(--text-main)]">
               <span>音量调节</span>
               <span>{Math.round(settings.ambientVolume * 100)}%</span>
             </div>

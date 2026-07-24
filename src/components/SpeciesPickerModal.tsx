@@ -26,23 +26,23 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-[#FFFEF8] rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl border border-[#c0c9c1]/30 max-h-[85vh] my-auto flex flex-col relative animate-in zoom-in-95 duration-200"
+        className="bg-[var(--bg-surface)] rounded-3xl p-5 sm:p-6 max-w-md w-full shadow-2xl border border-[var(--border)]/30 max-h-[85vh] my-auto flex flex-col relative animate-in zoom-in-95 duration-200"
       >
         {/* Header */}
         <div className="flex justify-between items-center mb-2.5 shrink-0">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#125238] text-2xl">park</span>
-            <h3 className="font-extrabold text-lg sm:text-xl text-[#26332C]">树种选择</h3>
+            <h3 className="font-extrabold text-lg sm:text-xl text-[var(--text-main)]">树种选择</h3>
           </div>
           <button
             onClick={onClose}
-            className="text-[#768078] hover:text-[#26332C] p-1.5 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
+            className="text-[var(--text-muted)] hover:text-[var(--text-main)] p-1.5 rounded-full hover:bg-black/5 transition-colors cursor-pointer"
           >
             <span className="material-symbols-outlined">close</span>
           </button>
         </div>
 
-        <p className="text-xs text-[#768078] mb-3 shrink-0">
+        <p className="text-xs text-[var(--text-muted)] mb-3 shrink-0">
           选择想要培育的树种，悬停或点击卡片可查看详细寓意与建议专注时长。
         </p>
 
@@ -65,7 +65,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
                   } ${
                     isSelected
                       ? 'border-[#125238] bg-[#125238]/5 ring-1 ring-[#125238]/30 shadow-xs'
-                      : 'border-[#c0c9c1]/35 hover:border-[#125238]/50 hover:shadow-xs'
+                      : 'border-[var(--border)]/35 hover:border-[#125238]/50 hover:shadow-xs'
                   }`}
                 >
                   {/* Selected Indicator or Rare Badge */}
@@ -96,7 +96,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
                   </div>
 
                   {/* Name */}
-                  <h4 className="font-extrabold text-xs sm:text-sm text-[#26332C] mb-1">{species.name}</h4>
+                  <h4 className="font-extrabold text-xs sm:text-sm text-[var(--text-main)] mb-1">{species.name}</h4>
 
                   {/* Duration Badge */}
                   <div

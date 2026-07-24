@@ -60,7 +60,7 @@ export const RankingView: React.FC = () => {
     if (index === 0) return { emoji: '🥇', bg: 'bg-amber-100 border-amber-300' };
     if (index === 1) return { emoji: '🥈', bg: 'bg-gray-100 border-gray-300' };
     if (index === 2) return { emoji: '🥉', bg: 'bg-orange-100 border-orange-300' };
-    return { emoji: '', bg: 'bg-[#FFFEF8] border-outline-variant/20' };
+    return { emoji: '', bg: 'bg-[var(--bg-surface)] border-outline-variant/20' };
   };
 
   if (loading) {
@@ -74,12 +74,12 @@ export const RankingView: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto px-4 pb-24 pt-4">
       <section className="mb-6">
-        <h2 className="font-bold text-3xl text-[#26332C] mb-1">专注排行</h2>
-        <p className="text-xs text-[#768078]">看看谁是最专注的园丁 🌟</p>
+        <h2 className="font-bold text-3xl text-[var(--text-main)] mb-1">专注排行</h2>
+        <p className="text-xs text-[var(--text-muted)]">看看谁是最专注的园丁 🌟</p>
       </section>
 
       {/* Sort Toggle */}
-      <div className="flex p-1 bg-[#f0eee5] rounded-full w-fit mb-6 border border-outline-variant/20">
+      <div className="flex p-1 bg-[var(--bg-surface2)] rounded-full w-fit mb-6 border border-outline-variant/20">
         <button
           onClick={() => setSortBy('minutes')}
           className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all ${
@@ -104,10 +104,10 @@ export const RankingView: React.FC = () => {
 
       {/* Ranking List */}
       {sorted.length === 0 ? (
-        <div className="text-center py-12 bg-[#FFFEF8] rounded-3xl border border-outline-variant/20">
-          <span className="material-symbols-outlined text-4xl text-[#768078] mb-2">leaderboard</span>
-          <p className="text-sm font-bold text-[#26332C]">暂无排行数据</p>
-          <p className="text-xs text-[#768078] mt-1">开始专注，成为排行榜第一名吧！</p>
+        <div className="text-center py-12 bg-[var(--bg-surface)] rounded-3xl border border-outline-variant/20">
+          <span className="material-symbols-outlined text-4xl text-[var(--text-muted)] mb-2">leaderboard</span>
+          <p className="text-sm font-bold text-[var(--text-main)]">暂无排行数据</p>
+          <p className="text-xs text-[var(--text-muted)] mt-1">开始专注，成为排行榜第一名吧！</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -132,7 +132,7 @@ export const RankingView: React.FC = () => {
                   {medal.emoji ? (
                     <span className={`text-2xl ${celebrating === entry.userId ? 'animate-ping' : ''}`}>{medal.emoji}</span>
                   ) : (
-                    <span className="text-sm font-bold text-[#768078]">{index + 1}</span>
+                    <span className="text-sm font-bold text-[var(--text-muted)]">{index + 1}</span>
                   )}
                 </div>
 
@@ -149,8 +149,8 @@ export const RankingView: React.FC = () => {
                     </div>
                   </div>
                   <div className="min-w-0">
-                    <p className="font-bold text-sm text-[#26332C] truncate">{entry.username}</p>
-                    <p className="text-[10px] text-[#768078]">
+                    <p className="font-bold text-sm text-[var(--text-main)] truncate">{entry.username}</p>
+                    <p className="text-[10px] text-[var(--text-muted)]">
                       种树 {entry.totalSessions} 棵
                     </p>
                   </div>
@@ -161,7 +161,7 @@ export const RankingView: React.FC = () => {
                   <p className="font-extrabold text-lg text-[#125238]">
                     {hours}h {mins}m
                   </p>
-                  <p className="text-[10px] text-[#768078]">专注时长</p>
+                  <p className="text-[10px] text-[var(--text-muted)]">专注时长</p>
                 </div>
               </div>
             );

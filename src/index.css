@@ -46,9 +46,28 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-.dark body, body.dark {
-  background-color: #1a1c1a;
-  color: #e2e3de;
+/* Global dark mode overrides */
+.dark {
+  --bg-page: #1a1c1a;
+  --bg-surface: #1e201e;
+  --bg-surface2: #252725;
+  --text-main: #e2e3de;
+  --text-muted: #9ca39e;
+  --border: #3a3d3a;
+}
+
+.light {
+  --bg-page: #fbf9f0;
+  --bg-surface: #FFFEF8;
+  --bg-surface2: #f0eee5;
+  --text-main: #26332C;
+  --text-muted: #768078;
+  --border: #c0c9c1;
+}
+
+body {
+  background-color: var(--bg-page, #fbf9f0);
+  color: var(--text-main, #26332C);
 }
 
 .material-symbols-outlined {

@@ -34,29 +34,29 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#fbf9f0] flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen w-full bg-[var(--bg-page)] flex items-center justify-center p-4 relative overflow-hidden">
       <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-[#b1ebba]/25 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-[#ffdea5]/20 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="bg-[#FFFEF8] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-[#c0c9c1]/30 relative z-10 animate-in fade-in zoom-in duration-300">
+      <div className="bg-[var(--bg-surface)] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-[var(--border)]/30 relative z-10 animate-in fade-in zoom-in duration-300">
         {/* Brand */}
         <div className="text-center mb-7">
           <div className="w-14 h-14 bg-[#125238] rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-[#125238]/20">
             <span className="material-symbols-outlined text-white text-2xl fill-1">park</span>
           </div>
           <h1 className="text-2xl font-extrabold text-[#125238] tracking-tight">Focus Forest</h1>
-          <p className="text-xs text-[#768078] mt-1">和朋友一起种树 🌱</p>
+          <p className="text-xs text-[var(--text-muted)] mt-1">和朋友一起种树 🌱</p>
         </div>
 
         {/* Tabs */}
-        <div className="bg-[#f0eee5] p-1 rounded-2xl flex mb-6 border border-[#c0c9c1]/20">
+        <div className="bg-[var(--bg-surface2)] p-1 rounded-2xl flex mb-6 border border-[var(--border)]/20">
           <button
             type="button"
             onClick={() => setMode('login')}
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
               mode === 'login'
                 ? 'bg-white text-[#125238] shadow-sm'
-                : 'text-[#768078] hover:text-[#125238]'
+                : 'text-[var(--text-muted)] hover:text-[#125238]'
             }`}
           >
             登录
@@ -67,7 +67,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all cursor-pointer ${
               mode === 'register'
                 ? 'bg-white text-[#125238] shadow-sm'
-                : 'text-[#768078] hover:text-[#125238]'
+                : 'text-[var(--text-muted)] hover:text-[#125238]'
             }`}
           >
             注册
@@ -76,7 +76,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-[#26332C] mb-1.5">用户名</label>
+            <label className="block text-xs font-bold text-[var(--text-main)] mb-1.5">用户名</label>
             <input
               type="text"
               value={username}
@@ -85,12 +85,12 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               required
               minLength={2}
               maxLength={20}
-              className="w-full py-3 px-4 bg-[#f0eee5]/80 border border-[#c0c9c1]/40 rounded-xl font-semibold text-sm text-[#26332C] placeholder:text-[#768078]/50 focus:bg-white focus:ring-2 focus:ring-[#125238] outline-none transition-all"
+              className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-white focus:ring-2 focus:ring-[#125238] outline-none transition-all"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#26332C] mb-1.5">密码</label>
+            <label className="block text-xs font-bold text-[var(--text-main)] mb-1.5">密码</label>
             <input
               type="password"
               value={password}
@@ -98,7 +98,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               placeholder={mode === 'register' ? '设置密码（至少4位）' : '输入密码'}
               required
               minLength={4}
-              className="w-full py-3 px-4 bg-[#f0eee5]/80 border border-[#c0c9c1]/40 rounded-xl font-semibold text-sm text-[#26332C] placeholder:text-[#768078]/50 focus:bg-white focus:ring-2 focus:ring-[#125238] outline-none transition-all"
+              className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-white focus:ring-2 focus:ring-[#125238] outline-none transition-all"
             />
           </div>
 
@@ -126,7 +126,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
           </button>
         </form>
 
-        <p className="text-xs text-center text-[#768078] mt-5">
+        <p className="text-xs text-center text-[var(--text-muted)] mt-5">
           {mode === 'login' ? '还没有账号？' : '已有账号？'}
           <button
             onClick={toggleMode}
