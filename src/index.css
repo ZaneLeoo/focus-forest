@@ -104,6 +104,49 @@ body {
   border-color: rgb(255 255 255 / 0.08);
 }
 
+/* Dark mode: ranking medal backgrounds */
+.dark .bg-amber-100 {
+  background-color: rgb(251 191 36 / 0.15);
+}
+
+.dark .bg-gray-100 {
+  background-color: rgb(255 255 255 / 0.08);
+}
+
+.dark .bg-orange-100 {
+  background-color: rgb(249 115 22 / 0.15);
+}
+
+.dark .border-amber-300 {
+  border-color: rgb(251 191 36 / 0.3);
+}
+
+.dark .border-gray-300 {
+  border-color: rgb(255 255 255 / 0.12);
+}
+
+.dark .border-orange-300 {
+  border-color: rgb(249 115 22 / 0.3);
+}
+
+/* Dark mode: green brand text */
+.dark .text-\[\#125238\] {
+  color: var(--green-brand);
+}
+
+.dark .text-\[\#346942\] {
+  color: #86d4a2;
+}
+
+/* Dark mode: sakura tree card background */
+.dark .bg-\[\#fff0f3\] {
+  background-color: rgb(233 30 99 / 0.12);
+}
+
+.dark .bg-amber-50 {
+  background-color: rgb(217 119 6 / 0.12);
+}
+
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   vertical-align: middle;

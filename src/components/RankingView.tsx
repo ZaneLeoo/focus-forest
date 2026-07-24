@@ -84,8 +84,8 @@ export const RankingView: React.FC = () => {
           onClick={() => setSortBy('minutes')}
           className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all ${
             sortBy === 'minutes'
-              ? 'bg-[var(--bg-surface)] shadow-md text-[#125238]'
-              : 'text-[var(--text-dim)] hover:text-[#125238]'
+              ? 'bg-[var(--bg-surface)] shadow-md text-[var(--green-brand)]'
+              : 'text-[var(--text-dim)] hover:text-[var(--green-brand)]'
           }`}
         >
           按总时长
@@ -94,8 +94,8 @@ export const RankingView: React.FC = () => {
           onClick={() => setSortBy('sessions')}
           className={`px-5 py-1.5 rounded-full text-xs font-bold transition-all ${
             sortBy === 'sessions'
-              ? 'bg-[var(--bg-surface)] shadow-md text-[#125238]'
-              : 'text-[var(--text-dim)] hover:text-[#125238]'
+              ? 'bg-[var(--bg-surface)] shadow-md text-[var(--green-brand)]'
+              : 'text-[var(--text-dim)] hover:text-[var(--green-brand)]'
           }`}
         >
           按种树数
@@ -158,7 +158,7 @@ export const RankingView: React.FC = () => {
 
                 {/* Stats */}
                 <div className="text-right shrink-0">
-                  <p className="font-extrabold text-lg text-[#125238]">
+                  <p className="font-extrabold text-lg text-[var(--green-brand)]">
                     {hours}h {mins}m
                   </p>
                   <p className="text-[10px] text-[var(--text-muted)]">专注时长</p>
