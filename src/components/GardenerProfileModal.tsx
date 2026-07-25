@@ -93,12 +93,37 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
 
         <div className="grid grid-cols-2 gap-2.5 my-4">
           <div className="p-3 bg-[var(--bg-surface2)] rounded-2xl text-center border border-[var(--border)]/20">
-            <p className="text-xs text-[var(--text-muted)] font-medium">累计完成树木</p>
+            <p className="text-xs text-[var(--text-muted)] font-medium">累计种树</p>
             <p className="text-xl font-extrabold text-[#125238] mt-1">{totalTreesCount} 棵</p>
           </div>
           <div className="p-3 bg-[var(--bg-surface2)] rounded-2xl text-center border border-[var(--border)]/20">
-            <p className="text-xs text-[var(--text-muted)] font-medium">生态头衔</p>
-            <p className="text-sm font-extrabold text-[#346942] mt-1">绿色守护者</p>
+            <p className="text-xs text-[var(--text-muted)] font-medium">园丁等级</p>
+            <p className="text-xl font-extrabold text-[#125238] mt-1">Lv.{Math.floor(totalTreesCount / 5) + 1}</p>
+          </div>
+        </div>
+
+        {/* Level Progress */}
+        <div className="mb-4 p-3 rounded-2xl bg-[var(--bg-surface2)] border border-[var(--border)]/20">
+          <div className="flex justify-between items-center mb-1.5">
+            <span className="text-[10px] text-[var(--text-muted)]">升级进度</span>
+            <span className="text-[10px] text-[var(--text-muted)]">
+              {(() => {
+                const level = Math.floor(totalTreesCount / 5) + 1;
+                const inLevel = totalTreesCount - (level - 1) * 5;
+                const toNext = Math.max(0, level * 5 - totalTreesCount);
+                return toNext > 0 ? `再种 ${toNext} 棵升 Lv.${level + 1}` : '已满级！';
+              })()}
+            </span>
+          </div>
+          <div className="w-full h-2 bg-[var(--border)]/30 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#125238] rounded-full transition-all duration-500"
+              style={{ width: `${(totalTreesCount % 5) / 5 * 100}%` }}
+            />
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-[9px] text-[var(--text-muted)]">Lv.{Math.floor(totalTreesCount / 5) + 1}</span>
+            <span className="text-[9px] text-[var(--text-muted)]">Lv.{Math.floor(totalTreesCount / 5) + 2}</span>
           </div>
         </div>
 
