@@ -190,7 +190,7 @@ export const ForestView: React.FC = () => {
                 <div
                   className={`w-full aspect-square rounded-2xl shadow-sm flex items-center justify-center relative overflow-hidden border border-outline-variant/20 transition-all ${
                     session.isRare
-                      ? 'bg-gradient-to-br from-pink-50 to-amber-50 dark:from-zinc-800 dark:to-zinc-850'
+                      ? 'bg-gradient-to-br from-pink-50 to-amber-50 dark:from-zinc-800 dark:to-zinc-900'
                       : 'bg-[var(--bg-surface)] dark:bg-zinc-800'
                   }`}
                 >
