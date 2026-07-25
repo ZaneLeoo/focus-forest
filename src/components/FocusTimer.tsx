@@ -388,6 +388,7 @@ export const FocusTimer: React.FC<FocusTimerProps> = ({
                     speciesId={selectedSpeciesId}
                     progress={growthProgress}
                     isCompleted={growthProgress >= 1.0}
+                    onTreeClick={onOpenSpeciesModal}
                   />
                 </div>
                 {/* Countdown Display overlaid below tree */}

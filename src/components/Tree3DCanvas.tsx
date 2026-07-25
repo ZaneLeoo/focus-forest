@@ -6,10 +6,11 @@ import { TreeSpeciesId } from '../types';
 
 interface Tree3DCanvasProps {
   speciesId: TreeSpeciesId;
-  progress: number; // 0.0 to 1.0
+  progress: number;
   isCompleted?: boolean;
   className?: string;
   autoRotate?: boolean;
+  onTreeClick?: () => void;
 }
 
 export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
@@ -18,9 +19,12 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
   isCompleted = false,
   className = '',
   autoRotate = true,
+  onTreeClick,
 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const [, setIsInteracting] = useState(false);
+  const mouseDownRef = useRef<{ x: number; y: number } | null>(null);
+  const CLICK_THRESHOLD = 5;
   const sceneRef = useRef<THREE.Scene | null>(null);
   const treeGroupRef = useRef<THREE.Group | null>(null);
   const foliageGroupRef = useRef<THREE.Group | null>(null);
@@ -272,13 +276,34 @@ export const Tree3DCanvas: React.FC<Tree3DCanvasProps> = ({
     <div
       ref={mountRef}
       className={`relative w-full h-full cursor-grab active:cursor-grabbing select-none ${className}`}
-      onMouseDown={() => setIsInteracting(true)}
-      onMouseUp={() => setIsInteracting(false)}
-      onTouchStart={() => setIsInteracting(true)}
-      onTouchEnd={() => setIsInteracting(false)}
+      onMouseDown={(e) => { setIsInteracting(true); mouseDownRef.current = { x: e.clientX, y: e.clientY }; }}
+      onMouseUp={(e) => {
+        setIsInteracting(false);
+        if (mouseDownRef.current) {
+          const dx = e.clientX - mouseDownRef.current.x;
+          const dy = e.clientY - mouseDownRef.current.y;
+          if (Math.abs(dx) < CLICK_THRESHOLD && Math.abs(dy) < CLICK_THRESHOLD) {
+            onTreeClick?.();
+          }
+          mouseDownRef.current = null;
+        }
+      }}
+      onTouchStart={(e) => { setIsInteracting(true); const t = e.touches[0]; mouseDownRef.current = { x: t.clientX, y: t.clientY }; }}
+      onTouchEnd={(e) => {
+        setIsInteracting(false);
+        if (mouseDownRef.current) {
+          const t = e.changedTouches[0];
+          const dx = t.clientX - mouseDownRef.current.x;
+          const dy = t.clientY - mouseDownRef.current.y;
+          if (Math.abs(dx) < CLICK_THRESHOLD && Math.abs(dy) < CLICK_THRESHOLD) {
+            onTreeClick?.();
+          }
+          mouseDownRef.current = null;
+        }
+      }}
     >
       <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 text-[10px] text-[#2f6b4f]/70 bg-[var(--bg-surface)]/70 backdrop-blur-2xs px-2 py-0.5 rounded-full pointer-events-none opacity-0 hover:opacity-100 transition-opacity shadow-2xs">
-        滑动 3D 树木 • 观察生长
+        滑动旋转 • 点击换树
       </div>
     </div>
   );
