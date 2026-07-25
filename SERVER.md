@@ -9,17 +9,16 @@
 
 | 项目 | 值 |
 |---|---|
-| 公网 IP | `8.134.77.221` |
+| 公网 IP | `<YOUR_SERVER_IP>` |
 | SSH 用户 | `root` |
-| SSH 密码 | `Yjxsz2001!` |
+| SSH 密码 | `<YOUR_PASSWORD>` |
 | SSH 端口 | `22` |
 | 访问地址 | http://8.134.77.221 |
 | GitHub 仓库 | git@github.com:ZaneLeoo/focus-forest.git（master 分支） |
 
 SSH 连接命令：
 ```bash
-ssh root@8.134.77.221
-# 密码: Yjxsz2001!
+ssh root@<YOUR_SERVER_IP>
 ```
 
 ---
