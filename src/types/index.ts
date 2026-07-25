@@ -70,9 +70,9 @@ export interface AppSettings {
   longBreakDuration?: number; // in minutes
   longBreakInterval?: number; // every N focus sessions
   autoStartBreak: boolean;
-  autoStartFocus?: boolean;
+
   theme: 'light' | 'dark' | 'system';
-  ambientSound: 'rain' | 'wind' | 'creek' | 'birds' | 'fire' | 'none' | 'rainforest' | 'breeze' | 'stream';
+  ambientSound: 'rainforest' | 'breeze' | 'stream' | 'birds' | 'none';
   ambientVolume: number; // 0 to 1
   animationIntensity: 0 | 1 | 2 | 'none' | 'reduced' | 'natural';
   soundNotifications: boolean;

@@ -153,7 +153,7 @@ app.post('/api/sessions', authMiddleware, (req, res) => {
     completed: completed !== false,
     isRare: isRare || false,
     note: note || '',
-    createdAt: req.body.createdAt || Date.now(),
+    createdAt: Date.now(),
   });
   res.status(201).json({ session });
 });
@@ -187,9 +187,8 @@ function getDefaultSettings(userId: string): db.StoredSettings {
     longBreakDuration: 15,
     longBreakInterval: 4,
     autoStartBreak: true,
-    autoStartFocus: false,
     theme: 'light',
-    ambientSound: 'rain',
+    ambientSound: 'rainforest',
     ambientVolume: 0.5,
     soundNotifications: true,
   };

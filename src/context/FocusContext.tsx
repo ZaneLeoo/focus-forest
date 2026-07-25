@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { NavTab, FocusSession, UserProfile, AppSettings, TreeSpeciesId } from '../types';
 import { loadSessions, saveSessions, loadUserProfile, saveUserProfile, loadSettings, saveSettings } from '../utils/storage';
-import { soundEngine } from '../utils/audio';
+import { audioSynth } from '../services/audioSynthesizer';
 import {
   fetchSessions,
   createSession as createSessionRemote,
@@ -123,9 +123,8 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           longBreakDuration: serverSettings.longBreakDuration || 15,
           longBreakInterval: serverSettings.longBreakInterval || 4,
           autoStartBreak: serverSettings.autoStartBreak !== false,
-          autoStartFocus: serverSettings.autoStartFocus || false,
           theme: (serverSettings.theme as AppSettings['theme']) || 'light',
-          ambientSound: (serverSettings.ambientSound as AppSettings['ambientSound']) || 'rain',
+          ambientSound: (serverSettings.ambientSound as AppSettings['ambientSound']) || 'rainforest',
           ambientVolume: serverSettings.ambientVolume || 0.5,
           animationIntensity: 2 as const,
           soundNotifications: serverSettings.soundNotifications !== false,
@@ -202,10 +201,10 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const toggleAmbientSound = useCallback((type?: AppSettings['ambientSound']) => {
     const target = type || settings.ambientSound;
     if (currentSoundType === target) {
-      soundEngine.stopAmbient();
+      audioSynth.stopSound();
       setCurrentSoundType('none');
     } else {
-      soundEngine.playAmbient(target, settings.ambientVolume);
+      audioSynth.playSound(target, settings.ambientVolume);
       setCurrentSoundType(target);
     }
   }, [currentSoundType, settings.ambientSound, settings.ambientVolume]);
@@ -270,7 +269,6 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         longBreakDuration: updated.longBreakDuration,
         longBreakInterval: updated.longBreakInterval,
         autoStartBreak: updated.autoStartBreak,
-        autoStartFocus: updated.autoStartFocus,
         theme: updated.theme,
         ambientSound: updated.ambientSound,
         ambientVolume: updated.ambientVolume,

@@ -108,7 +108,6 @@ export interface StoredSettings {
   longBreakDuration: number;
   longBreakInterval: number;
   autoStartBreak: boolean;
-  autoStartFocus: boolean;
   theme: string;
   ambientSound: string;
   ambientVolume: number;
@@ -193,21 +192,21 @@ export function upsertSettings(settings: StoredSettings): StoredSettings {
   if (existing) {
     db.run(
       `UPDATE settings SET focus_duration=?, break_duration=?, short_break_duration=?, long_break_duration=?,
-       long_break_interval=?, auto_start_break=?, auto_start_focus=?, theme=?, ambient_sound=?,
+       long_break_interval=?, auto_start_break=?, theme=?, ambient_sound=?,
        ambient_volume=?, sound_notifications=? WHERE user_id=?`,
       [settings.focusDuration, settings.breakDuration, settings.shortBreakDuration, settings.longBreakDuration,
-       settings.longBreakInterval, settings.autoStartBreak ? 1 : 0, settings.autoStartFocus ? 1 : 0,
+       settings.longBreakInterval, settings.autoStartBreak ? 1 : 0,
        settings.theme, settings.ambientSound, settings.ambientVolume, settings.soundNotifications ? 1 : 0,
        settings.userId]
     );
   } else {
     db.run(
       `INSERT INTO settings (user_id, focus_duration, break_duration, short_break_duration, long_break_duration,
-       long_break_interval, auto_start_break, auto_start_focus, theme, ambient_sound, ambient_volume, sound_notifications)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+       long_break_interval, auto_start_break, theme, ambient_sound, ambient_volume, sound_notifications)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       [settings.userId, settings.focusDuration, settings.breakDuration, settings.shortBreakDuration,
        settings.longBreakDuration, settings.longBreakInterval, settings.autoStartBreak ? 1 : 0,
-       settings.autoStartFocus ? 1 : 0, settings.theme, settings.ambientSound, settings.ambientVolume,
+       settings.theme, settings.ambientSound, settings.ambientVolume,
        settings.soundNotifications ? 1 : 0]
     );
   }
@@ -265,7 +264,7 @@ function rowToSettings(row: any[]): StoredSettings {
   return {
     userId: row[0], focusDuration: row[1], breakDuration: row[2], shortBreakDuration: row[3],
     longBreakDuration: row[4], longBreakInterval: row[5], autoStartBreak: !!row[6],
-    autoStartFocus: !!row[7], theme: row[8], ambientSound: row[9],
-    ambientVolume: row[10], soundNotifications: !!row[11],
+    theme: row[7], ambientSound: row[8],
+    ambientVolume: row[9], soundNotifications: !!row[10],
   };
 }

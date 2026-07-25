@@ -31,7 +31,6 @@ export interface ServerSettings {
   longBreakDuration: number;
   longBreakInterval: number;
   autoStartBreak: boolean;
-  autoStartFocus: boolean;
   theme: string;
   ambientSound: string;
   ambientVolume: number;
