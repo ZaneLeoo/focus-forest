@@ -98,6 +98,10 @@ export function getStoredUser(): SafeUser | null {
   } catch { return null; }
 }
 
+export async function updateAvatarRemote(avatar: string): Promise<void> {
+  await request('/api/auth/avatar', { method: 'PUT', body: JSON.stringify({ avatar }) });
+}
+
 // ---- Sessions ----
 export async function fetchSessions(): Promise<ServerSession[]> {
   const data = await request<{ sessions: ServerSession[] }>('/api/sessions');

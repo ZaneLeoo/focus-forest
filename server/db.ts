@@ -233,6 +233,14 @@ export function updatePassword(id: string, hash: string, salt: string): boolean 
   return true;
 }
 
+export function updateAvatar(id: string, avatar: string): boolean {
+  const user = findUserById(id);
+  if (!user) return false;
+  db.run('UPDATE users SET avatar = ? WHERE id = ?', [avatar, id]);
+  saveToDisk();
+  return true;
+}
+
 // ---- Rankings ----
 export interface RankingEntry {
   userId: string;

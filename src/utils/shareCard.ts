@@ -1,12 +1,12 @@
 // Generate a share card PNG using Canvas
-export function generateShareCard(data: {
+export async function generateShareCard(data: {
   userName: string;
   userAvatar: string;
   level: number;
   totalTrees: number;
   totalMinutes: number;
   streakDays: number;
-}) {
+}): Promise<HTMLCanvasElement> {
   const W = 600;
   const H = 800;
   const canvas = document.createElement('canvas');
@@ -44,41 +44,25 @@ export function generateShareCard(data: {
   ctx.textAlign = 'center';
   ctx.fillText('🌳 Focus Forest', W / 2, 120);
 
-  // Avatar circle
-  ctx.beginPath();
-  ctx.arc(W / 2, 210, 55, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(177, 235, 186, 0.2)';
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(177, 235, 186, 0.5)';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-
-  // Avatar emoji
-  ctx.font = '56px sans-serif';
-  ctx.fillStyle = '#fff';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(data.userAvatar, W / 2, 210);
-
   // Username + Level
   ctx.font = 'bold 28px "Manrope", "PingFang SC", sans-serif';
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
-  ctx.fillText(data.userName, W / 2, 290);
+  ctx.fillText(data.userName, W / 2, 295);
   ctx.font = 'bold 16px "Manrope", "PingFang SC", sans-serif';
   ctx.fillStyle = '#96d4b2';
-  ctx.fillText(`Lv.${data.level} · 园丁`, W / 2, 320);
+  ctx.fillText(`Lv.${data.level} · 园丁`, W / 2, 325);
 
   // Divider
   ctx.strokeStyle = 'rgba(177, 235, 186, 0.2)';
   ctx.lineWidth = 1;
   ctx.beginPath();
-  ctx.moveTo(60, 360);
-  ctx.lineTo(W - 60, 360);
+  ctx.moveTo(60, 365);
+  ctx.lineTo(W - 60, 365);
   ctx.stroke();
 
   // Stats row
-  const statsY = 440;
+  const statsY = 445;
   const totalHours = Math.floor(data.totalMinutes / 60);
   const totalMins = data.totalMinutes % 60;
 
@@ -107,7 +91,7 @@ export function generateShareCard(data: {
   });
 
   // Level progress bar
-  const barY = 540;
+  const barY = 545;
   const levelProgress = (data.totalTrees % 5) / 5;
   const barW = W - 120;
   const barH = 12;
@@ -118,13 +102,11 @@ export function generateShareCard(data: {
   ctx.textAlign = 'center';
   ctx.fillText('升级进度', W / 2, barY - 20);
 
-  // Bar background
   ctx.fillStyle = 'rgba(255,255,255,0.1)';
   ctx.beginPath();
   ctx.roundRect(barX, barY, barW, barH, barH / 2);
   ctx.fill();
 
-  // Bar progress
   ctx.fillStyle = '#b1ebba';
   ctx.beginPath();
   ctx.roundRect(barX, barY, Math.max(barH, barW * levelProgress), barH, barH / 2);
@@ -138,7 +120,7 @@ export function generateShareCard(data: {
   ctx.fillText(`Lv.${data.level + 1}`, barX + barW, barY + 38);
 
   // Footer
-  const footerY = 660;
+  const footerY = 665;
   ctx.strokeStyle = 'rgba(177, 235, 186, 0.2)';
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -155,12 +137,49 @@ export function generateShareCard(data: {
   ctx.fillStyle = '#96d4b2';
   ctx.fillText('把专注变成种树，建造一片数字森林 🌱', W / 2, footerY + 80);
 
-  // Bottom corner
   ctx.font = '11px "Manrope", "PingFang SC", sans-serif';
   ctx.fillStyle = 'rgba(177, 235, 186, 0.4)';
+  ctx.textAlign = 'right';
   ctx.fillText('focus-forest.app', W - 60, H - 30);
 
+  // Avatar (drawn last, on top)
+  await drawAvatar(ctx, data.userAvatar, W / 2, 195, 55);
+
+  // Avatar ring
+  ctx.beginPath();
+  ctx.arc(W / 2, 195, 56, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(177, 235, 186, 0.5)';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
   return canvas;
+}
+
+function drawAvatar(ctx: CanvasRenderingContext2D, avatar: string, cx: number, cy: number, r: number): Promise<void> {
+  return new Promise((resolve) => {
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    if (avatar.startsWith('data:')) {
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, cx - r, cy - r, r * 2, r * 2);
+        ctx.restore();
+        resolve();
+      };
+      img.src = avatar;
+    } else {
+      ctx.font = `${r * 1.1}px sans-serif`;
+      ctx.fillStyle = '#fff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(avatar, cx, cy);
+      ctx.restore();
+      resolve();
+    }
+  });
 }
 
 export function downloadShareCard(canvas: HTMLCanvasElement) {

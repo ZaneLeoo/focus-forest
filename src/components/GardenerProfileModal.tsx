@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { ViewMode } from '../types';
 import { generateShareCard, downloadShareCard } from '../utils/shareCard';
+import { updateAvatarRemote } from '../services/api';
 
 const AVATARS = ['🌵', '🪴', '🌿', '🍀', '🌻', '🌸', '🌺', '🐱', '🐶', '🐕', '🐈', '🐩', '🐾', '🦊', '🐰', '🐼'];
 
@@ -30,16 +31,43 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
   onLogout,
 }) => {
   const [showAvatarPicker, setShowAvatarPicker] = useState(false);
+  const [avatarTab, setAvatarTab] = useState<'emoji' | 'upload'>('emoji');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isCustomImage = userAvatar.startsWith('data:');
 
   if (!isOpen) return null;
 
   const handleSelectAvatar = (avatar: string) => {
     onChangeAvatar(avatar);
+    updateAvatarRemote(avatar).catch(() => {});
     setShowAvatarPicker(false);
   };
 
-  const handleShare = () => {
-    const canvas = generateShareCard({
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 200;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d')!;
+      const min = Math.min(img.width, img.height);
+      const sx = (img.width - min) / 2;
+      const sy = (img.height - min) / 2;
+      ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
+      const base64 = canvas.toDataURL('image/jpeg', 0.8);
+      onChangeAvatar(base64);
+      updateAvatarRemote(base64).catch(() => {});
+      setShowAvatarPicker(false);
+    };
+    img.src = URL.createObjectURL(file);
+  };
+
+  const handleShare = async () => {
+    const canvas = await generateShareCard({
       userName,
       userAvatar,
       level: Math.floor(totalTreesCount / 5) + 1,
@@ -75,10 +103,14 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
         <div className="flex flex-col items-center text-center py-2 shrink-0">
           <button
             onClick={() => setShowAvatarPicker(!showAvatarPicker)}
-            className="w-20 h-20 rounded-full bg-[#b1ebba] flex items-center justify-center text-4xl border-2 border-[#125238]/30 shadow-md mb-3 hover:scale-105 active:scale-95 transition-all cursor-pointer relative group"
+            className="w-20 h-20 rounded-full bg-[#b1ebba] flex items-center justify-center border-2 border-[#125238]/30 shadow-md mb-3 hover:scale-105 active:scale-95 transition-all cursor-pointer relative group overflow-hidden"
             title="点击更换头像"
           >
-            {userAvatar}
+            {isCustomImage ? (
+              <img src={userAvatar} alt="头像" className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-4xl">{userAvatar}</span>
+            )}
             <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
               <span className="material-symbols-outlined text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-sm">edit</span>
             </div>
@@ -89,22 +121,65 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
         {/* Avatar picker */}
         {showAvatarPicker && (
           <div className="mt-3 mb-2 p-3 bg-[var(--bg-surface2)] rounded-2xl border border-[var(--border)]/20 animate-in fade-in zoom-in-95 duration-150">
-            <p className="text-[11px] font-bold text-[var(--text-muted)] text-center mb-2">选择头像</p>
-            <div className="grid grid-cols-8 gap-1.5">
-              {AVATARS.map(emoji => (
-                <button
-                  key={emoji}
-                  onClick={() => handleSelectAvatar(emoji)}
-                  className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-all cursor-pointer ${
-                    userAvatar === emoji
-                      ? 'bg-[#b1ebba]/60 ring-2 ring-[#125238] scale-110'
-                      : 'bg-[var(--bg-surface)] hover:bg-[#e4e2d7]'
-                  }`}
-                >
-                  {emoji}
-                </button>
-              ))}
+            {/* Tabs */}
+            <div className="flex p-0.5 bg-[var(--bg-surface)] rounded-lg mb-3 border border-[var(--border)]/20">
+              <button
+                onClick={() => setAvatarTab('emoji')}
+                className={`flex-1 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  avatarTab === 'emoji' ? 'bg-[#125238] text-white' : 'text-[var(--text-muted)]'
+                }`}
+              >
+                😊 Emoji
+              </button>
+              <button
+                onClick={() => setAvatarTab('upload')}
+                className={`flex-1 py-1.5 rounded-md text-xs font-bold transition-all ${
+                  avatarTab === 'upload' ? 'bg-[#125238] text-white' : 'text-[var(--text-muted)]'
+                }`}
+              >
+                📷 上传
+              </button>
             </div>
+
+            {avatarTab === 'emoji' ? (
+              <>
+                <p className="text-[11px] font-bold text-[var(--text-muted)] text-center mb-2">选择表情头像</p>
+                <div className="grid grid-cols-8 gap-1.5">
+                  {AVATARS.map(emoji => (
+                    <button
+                      key={emoji}
+                      onClick={() => handleSelectAvatar(emoji)}
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center text-lg transition-all cursor-pointer ${
+                        userAvatar === emoji
+                          ? 'bg-[#b1ebba]/60 ring-2 ring-[#125238] scale-110'
+                          : 'bg-[var(--bg-surface)] hover:bg-[#e4e2d7]'
+                      }`}
+                    >
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-3">
+                <p className="text-[11px] font-bold text-[var(--text-muted)] mb-3">上传自定义头像</p>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-5 py-3 bg-[#125238] text-white rounded-xl font-bold text-xs hover:opacity-90 active:scale-98 transition-all cursor-pointer inline-flex items-center gap-1.5"
+                >
+                  <span className="material-symbols-outlined text-sm">upload</span>
+                  选择图片
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+                <p className="text-[10px] text-[var(--text-muted)] mt-2">自动裁剪为正方形 · 最大 200KB</p>
+              </div>
+            )}
           </div>
         )}
 

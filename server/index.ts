@@ -131,6 +131,17 @@ app.get('/api/auth/me', authMiddleware, (req, res) => {
   res.json({ user: toSafeUser(user) });
 });
 
+app.put('/api/auth/avatar', authMiddleware, (req, res) => {
+  const userId = (req as any).userId;
+  const { avatar } = req.body;
+  if (!avatar || typeof avatar !== 'string' || avatar.length > 200000) {
+    res.status(400).json({ error: '头像数据无效' }); return;
+  }
+  const ok = db.updateAvatar(userId, avatar);
+  if (!ok) { res.status(404).json({ error: '用户不存在' }); return; }
+  res.json({ success: true, avatar });
+});
+
 // ===== SESSIONS ROUTES =====
 app.get('/api/sessions', authMiddleware, (req, res) => {
   const userId = (req as any).userId;
