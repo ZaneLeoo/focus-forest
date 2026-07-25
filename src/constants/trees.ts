@@ -50,6 +50,30 @@ export const TREE_SPECIES: TreeSpecies[] = [
     minDuration: 30,
     isRare: true,
   },
+  {
+    id: 'bamboo',
+    name: '翠竹',
+    icon: 'communication',
+    color: '#166534',
+    bgColor: 'bg-green-50',
+    description: '节节高升的翠竹，虚怀若谷，宁静致远。',
+    rarity: 'rare',
+    minLevelRequired: 2,
+    minDuration: 35,
+    isRare: true,
+  },
+  {
+    id: 'golden',
+    name: '黄金神木',
+    icon: 'emoji_nature',
+    color: '#d4af37',
+    bgColor: 'bg-yellow-50',
+    description: '散发金色光辉的神木，传说能赐予无尽的灵感。',
+    rarity: 'legendary',
+    minLevelRequired: 3,
+    minDuration: 60,
+    isRare: true,
+  },
 ];
 
 export const CATEGORIES: CategoryOption[] = [

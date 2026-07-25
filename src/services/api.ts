@@ -123,6 +123,10 @@ export async function deleteSessionRemote(id: string): Promise<void> {
   await request('/api/sessions/' + id, { method: 'DELETE' });
 }
 
+export async function clearSessionsRemote(): Promise<void> {
+  await request('/api/sessions', { method: 'DELETE' });
+}
+
 // ---- Rankings ----
 export async function fetchRankings(): Promise<RankingEntry[]> {
   const data = await request<{ rankings: RankingEntry[] }>('/api/rankings');

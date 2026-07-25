@@ -40,6 +40,7 @@ export default function App() {
     sessions,
     addSession,
     deleteSession,
+    clearAllSessions,
     syncing,
   } = useFocus();
 
@@ -201,7 +202,7 @@ export default function App() {
               onUpdateSettings={handleUpdateSettings}
               onExportCSV={handleExportCSV}
               onResetData={() => {
-                sessions.forEach(s => deleteSession(s.id));
+                clearAllSessions();
               }}
               onOpenAmbientModal={() => setShowAmbientModal(true)}
             />

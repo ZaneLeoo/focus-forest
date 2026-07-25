@@ -6,6 +6,7 @@ import {
   fetchSessions,
   createSession as createSessionRemote,
   deleteSessionRemote,
+  clearSessionsRemote,
   fetchSettings,
   saveSettingsRemote,
   getMe,
@@ -24,6 +25,7 @@ interface FocusContextType {
   sessions: FocusSession[];
   addSession: (session: Omit<FocusSession, 'id' | 'createdAt'>) => void;
   deleteSession: (id: string) => void;
+  clearAllSessions: () => void;
   toggleAmbientSound: (type?: AppSettings['ambientSound']) => void;
   currentSoundType: string;
   isLoggedIn: boolean;
@@ -258,6 +260,12 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     deleteSessionRemote(id).catch(e => console.warn('Failed to delete session on server', e));
   }, []);
 
+  const clearAllSessions = useCallback(() => {
+    setSessions([]);
+    saveSessions([]);
+    clearSessionsRemote().catch(e => console.warn('Failed to clear sessions on server', e));
+  }, []);
+
   const updateSettings = useCallback((newSettings: Partial<AppSettings>) => {
     setSettings(prev => {
       const updated = { ...prev, ...newSettings };
@@ -289,6 +297,7 @@ export const FocusProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         sessions,
         addSession,
         deleteSession,
+        clearAllSessions,
         toggleAmbientSound,
         currentSoundType,
         isLoggedIn,

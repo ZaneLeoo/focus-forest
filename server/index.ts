@@ -164,6 +164,11 @@ app.delete('/api/sessions/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
+app.delete('/api/sessions', authMiddleware, (req, res) => {
+  db.clearSessionsByUser((req as any).userId);
+  res.json({ success: true });
+});
+
 // ===== SETTINGS ROUTES =====
 app.get('/api/settings', authMiddleware, (req, res) => {
   const userId = (req as any).userId;

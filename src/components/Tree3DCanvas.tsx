@@ -347,6 +347,12 @@ function buildDetailedTreeModel(
     case 'ginkgo':
       buildDetailedGinkgo(treeGroup, foliageGroup, progress);
       break;
+    case 'bamboo':
+      buildDetailedBamboo(treeGroup, foliageGroup, progress);
+      break;
+    case 'golden':
+      buildDetailedGoldenTree(treeGroup, foliageGroup, progress);
+      break;
     case 'oak':
     default:
       buildDetailedOak(treeGroup, foliageGroup, progress);
@@ -552,36 +558,7 @@ function buildDetailedGinkgo(treeGroup: THREE.Group, foliageGroup: THREE.Group, 
   });
 }
 
-// 6. Baobab Tree (猴面包树 - Swollen Textured Trunk & Wide Crown)
-function buildDetailedBaobab(treeGroup: THREE.Group, foliageGroup: THREE.Group, progress: number) {
-  const barkColor = 0x6e5039;
-
-  // Swollen Trunk
-  const trunk = createCurvedTrunk(0.75, 0.52, 1.8, barkColor, 0, 0);
-  trunk.position.y = 0.9;
-  treeGroup.add(trunk);
-
-  const leafMat = new THREE.MeshStandardMaterial({ color: 0x3f6212, roughness: 0.7, flatShading: true });
-  const leafMatTip = new THREE.MeshStandardMaterial({ color: 0x65a30d, roughness: 0.6, flatShading: true });
-
-  const crowns = [
-    { pos: [0, 2.1, 0], r: 0.85, mat: leafMat },
-    { pos: [-0.55, 2.15, 0.3], r: 0.6, mat: leafMatTip },
-    { pos: [0.55, 2.15, -0.3], r: 0.6, mat: leafMatTip },
-    { pos: [0, 2.35, 0], r: 0.65, mat: leafMatTip },
-  ];
-
-  crowns.forEach(c => {
-    const geo = new THREE.IcosahedronGeometry(c.r, 1);
-    geo.scale(1.3, 0.55, 1.3);
-    const mesh = new THREE.Mesh(geo, c.mat);
-    mesh.position.set(c.pos[0], c.pos[1], c.pos[2]);
-    mesh.castShadow = true;
-    foliageGroup.add(mesh);
-  });
-}
-
-// 7. Bamboo Grove (翠竹 - Multi-stem Jointed Bamboo Stalks)
+// 6. Bamboo Grove (翠竹 - Multi-stem Jointed Bamboo Stalks)
 function buildDetailedBamboo(treeGroup: THREE.Group, foliageGroup: THREE.Group, progress: number) {
   const bambooMat = new THREE.MeshStandardMaterial({ color: 0x166534, roughness: 0.35 });
   const jointMat = new THREE.MeshStandardMaterial({ color: 0x86efac, roughness: 0.3 });

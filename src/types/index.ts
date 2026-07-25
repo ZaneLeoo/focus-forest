@@ -1,7 +1,7 @@
 export type NavTab = 'focus' | 'forest' | 'stats' | 'ranking' | 'settings';
 export type ViewMode = NavTab | 'timer' | 'forest' | 'stats' | 'ranking' | 'settings';
 
-export type TreeSpeciesId = 'oak' | 'pine' | 'sakura' | 'ginkgo';
+export type TreeSpeciesId = 'oak' | 'pine' | 'sakura' | 'ginkgo' | 'bamboo' | 'golden';
 
 export interface TreeSpecies {
   id: TreeSpeciesId;

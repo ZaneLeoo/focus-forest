@@ -216,6 +216,8 @@ export function upsertSettings(settings: StoredSettings): StoredSettings {
 
 // ---- User deletion ----
 export function deleteUserById(id: string): boolean {
+  const user = findUserById(id);
+  if (!user) return false;
   db.run('DELETE FROM sessions WHERE user_id = ?', [id]);
   db.run('DELETE FROM settings WHERE user_id = ?', [id]);
   db.run('DELETE FROM users WHERE id = ?', [id]);
