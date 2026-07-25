@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ViewMode } from '../types';
-import { generateShareCard, downloadShareCard } from '../utils/shareCard';
+import { generateShareCard, downloadShareCard, SHARE_STYLES } from '../utils/shareCard';
 import { updateAvatarRemote } from '../services/api';
 
 const AVATARS = ['🌵', '🪴', '🌿', '🍀', '🌻', '🌸', '🌺', '🐱', '🐶', '🐕', '🐈', '🐩', '🐾', '🦊', '🐰', '🐼'];
@@ -66,7 +66,10 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
     img.src = URL.createObjectURL(file);
   };
 
-  const handleShare = async () => {
+  const [showShareStyles, setShowShareStyles] = useState(false);
+
+  const handleShare = async (styleId: string) => {
+    const style = SHARE_STYLES.find(s => s.id === styleId) || SHARE_STYLES[0];
     const canvas = await generateShareCard({
       userName,
       userAvatar,
@@ -220,13 +223,37 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
         </div>
 
         <div className="space-y-2 mt-auto shrink-0">
-          <button
-            onClick={handleShare}
-            className="w-full py-2.5 bg-[#b1ebba]/40 text-[#125238] rounded-xl font-bold text-xs hover:bg-[#b1ebba] active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-1.5"
-          >
-            <span className="material-symbols-outlined text-base">share</span>
-            分享森林卡片
-          </button>
+          {!showShareStyles ? (
+            <button
+              onClick={() => setShowShareStyles(true)}
+              className="w-full py-2.5 bg-[#b1ebba]/40 text-[#125238] rounded-xl font-bold text-xs hover:bg-[#b1ebba] active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-1.5"
+            >
+              <span className="material-symbols-outlined text-base">share</span>
+              分享森林卡片
+            </button>
+          ) : (
+            <div className="p-3 bg-[var(--bg-surface2)] rounded-2xl border border-[var(--border)]/20 animate-in fade-in zoom-in-95 duration-150">
+              <p className="text-[10px] font-bold text-[var(--text-muted)] text-center mb-2">选择卡片风格</p>
+              <div className="grid grid-cols-4 gap-2 mb-2">
+                {SHARE_STYLES.map(s => (
+                  <button
+                    key={s.id}
+                    onClick={() => handleShare(s.id)}
+                    className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-[var(--bg-surface)] active:scale-95 transition-all cursor-pointer"
+                  >
+                    <span className="text-xl">{s.icon}</span>
+                    <span className="text-[10px] font-bold text-[var(--text-main)]">{s.name}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setShowShareStyles(false)}
+                className="w-full text-[10px] text-[var(--text-muted)] hover:text-[var(--text-main)] cursor-pointer"
+              >
+                取消
+              </button>
+            </div>
+          )}
           <button
             onClick={() => {
               onClose();
