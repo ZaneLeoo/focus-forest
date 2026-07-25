@@ -11,6 +11,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +20,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
 
     try {
       const fn = mode === 'login' ? apiLogin : register;
-      const { user } = await fn(username.trim(), password);
+      const { user } = await fn(username.trim(), password, rememberMe);
       onLogin(user.username, user.avatar);
     } catch (err: any) {
       setError(err.message || '操作失败，请重试');
@@ -108,6 +109,18 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
             <div className="bg-[#ba1a1a]/10 text-[#ba1a1a] text-xs font-bold px-4 py-2.5 rounded-xl">
               {error}
             </div>
+          )}
+
+          {mode === 'login' && (
+            <label className="flex items-center gap-2 cursor-pointer select-none">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="w-4 h-4 rounded accent-[#125238] cursor-pointer"
+              />
+              <span className="text-xs text-[var(--text-muted)] font-medium">7 天内免登录</span>
+            </label>
           )}
 
           <button

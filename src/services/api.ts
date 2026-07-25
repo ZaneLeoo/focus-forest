@@ -53,17 +53,17 @@ export function getStoredToken(): string | null {
 }
 
 // ---- Auth ----
-export async function register(username: string, password: string) {
+export async function register(username: string, password: string, rememberMe = false) {
   const data = await request<{ token: string; user: SafeUser }>('/api/auth/register', {
-    method: 'POST', body: JSON.stringify({ username, password }),
+    method: 'POST', body: JSON.stringify({ username, password, rememberMe }),
   });
   persistAuth(data.token, data.user);
   return data;
 }
 
-export async function login(username: string, password: string) {
+export async function login(username: string, password: string, rememberMe = false) {
   const data = await request<{ token: string; user: SafeUser }>('/api/auth/login', {
-    method: 'POST', body: JSON.stringify({ username, password }),
+    method: 'POST', body: JSON.stringify({ username, password, rememberMe }),
   });
   persistAuth(data.token, data.user);
   return data;

@@ -23,8 +23,9 @@ function hashPassword(password: string, salt?: string): { hash: string; salt: st
   return { hash, salt: s };
 }
 
-function createToken(userId: string): string {
-  const payload = JSON.stringify({ userId, exp: Date.now() + 7 * 24 * 3600 * 1000 });
+function createToken(userId: string, rememberMe = false): string {
+  const days = rememberMe ? 30 : 7;
+  const payload = JSON.stringify({ userId, exp: Date.now() + days * 24 * 3600 * 1000 });
   const b64 = Buffer.from(payload).toString('base64url');
   const sig = crypto.createHmac('sha256', TOKEN_SECRET).update(b64).digest('base64url');
   return `${b64}.${sig}`;
@@ -95,7 +96,7 @@ function authMiddleware(req: express.Request, res: express.Response, next: expre
 
 // ===== AUTH ROUTES =====
 app.post('/api/auth/register', (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, rememberMe } = req.body;
   if (!username || !password || username.length < 2 || username.length > 20) {
     res.status(400).json({ error: '用户名需要 2-20 个字符' }); return;
   }
@@ -112,16 +113,16 @@ app.post('/api/auth/register', (req, res) => {
     avatar: AVATARS[Math.floor(Math.random() * AVATARS.length)],
     createdAt: new Date().toISOString(),
   });
-  res.status(201).json({ token: createToken(user.id), user: toSafeUser(user) });
+  res.status(201).json({ token: createToken(user.id, !!rememberMe), user: toSafeUser(user) });
 });
 
 app.post('/api/auth/login', (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, rememberMe } = req.body;
   const user = db.findUserByUsername(username);
   if (!user) { res.status(401).json({ error: '用户名或密码错误' }); return; }
   const { hash } = hashPassword(password, user.salt);
   if (hash !== user.passwordHash) { res.status(401).json({ error: '用户名或密码错误' }); return; }
-  res.json({ token: createToken(user.id), user: toSafeUser(user) });
+  res.json({ token: createToken(user.id, !!rememberMe), user: toSafeUser(user) });
 });
 
 app.get('/api/auth/me', authMiddleware, (req, res) => {
