@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ViewMode } from '../types';
+import { generateShareCard, downloadShareCard } from '../utils/shareCard';
 
 const AVATARS = ['🌵', '🪴', '🌿', '🍀', '🌻', '🌸', '🌺', '🐱', '🐶', '🐕', '🐈', '🐩', '🐾', '🦊', '🐰', '🐼'];
 
@@ -9,6 +10,8 @@ interface GardenerProfileModalProps {
   userName: string;
   userAvatar: string;
   totalTreesCount: number;
+  totalMinutes: number;
+  streakDays: number;
   onSelectView: (view: ViewMode) => void;
   onChangeAvatar: (avatar: string) => void;
   onLogout: () => void;
@@ -20,6 +23,8 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
   userName,
   userAvatar,
   totalTreesCount,
+  totalMinutes,
+  streakDays,
   onSelectView,
   onChangeAvatar,
   onLogout,
@@ -31,6 +36,18 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
   const handleSelectAvatar = (avatar: string) => {
     onChangeAvatar(avatar);
     setShowAvatarPicker(false);
+  };
+
+  const handleShare = () => {
+    const canvas = generateShareCard({
+      userName,
+      userAvatar,
+      level: Math.floor(totalTreesCount / 5) + 1,
+      totalTrees: totalTreesCount,
+      totalMinutes,
+      streakDays,
+    });
+    downloadShareCard(canvas);
   };
 
   return (
@@ -128,6 +145,13 @@ export const GardenerProfileModal: React.FC<GardenerProfileModalProps> = ({
         </div>
 
         <div className="space-y-2 mt-auto shrink-0">
+          <button
+            onClick={handleShare}
+            className="w-full py-2.5 bg-[#b1ebba]/40 text-[#125238] rounded-xl font-bold text-xs hover:bg-[#b1ebba] active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-1.5"
+          >
+            <span className="material-symbols-outlined text-base">share</span>
+            分享森林卡片
+          </button>
           <button
             onClick={() => {
               onClose();

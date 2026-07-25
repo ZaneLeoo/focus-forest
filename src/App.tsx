@@ -93,6 +93,29 @@ export default function App() {
   // Total trees (completed sessions)
   const totalTreesPlanted = sessions.filter(s => s.completed).length;
 
+  // Total focus minutes
+  const totalMinutes = sessions
+    .filter(s => s.completed)
+    .reduce((acc, s) => acc + s.durationMinutes, 0);
+
+  // Streak days
+  const streakDays = (() => {
+    const completedDates = new Set<string>();
+    sessions.filter(s => s.completed).forEach(s => {
+      completedDates.add(new Date(s.createdAt).toISOString().slice(0, 10));
+    });
+    let streak = 0;
+    const today = new Date();
+    for (let i = 0; i < 365; i++) {
+      const d = new Date(today.getTime() - i * 86400000);
+      const key = d.toISOString().slice(0, 10);
+      if (completedDates.has(key)) streak++;
+      else if (i === 0) continue;
+      else break;
+    }
+    return streak;
+  })();
+
   // Delete session
   const handleDeleteSession = (id: string) => {
     deleteSession(id);
@@ -241,6 +264,8 @@ export default function App() {
         userAvatar={userAvatar}
         onChangeAvatar={setUserAvatar}
         totalTreesCount={totalTreesPlanted}
+        totalMinutes={totalMinutes}
+        streakDays={streakDays}
         onSelectView={handleSelectView}
         onLogout={handleLogout}
       />
