@@ -7,7 +7,7 @@ interface SpeciesPickerModalProps {
   onClose: () => void;
   selectedSpeciesId: TreeSpeciesId;
   onSelectSpecies: (speciesId: TreeSpeciesId) => void;
-  currentDurationMinutes: number;
+  gardenerLevel: number;
 }
 
 export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
@@ -15,19 +15,19 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
   onClose,
   selectedSpeciesId,
   onSelectSpecies,
-  currentDurationMinutes,
+  gardenerLevel,
 }) => {
   const [shakeId, setShakeId] = useState<string | null>(null);
 
   const sortedSpecies = useMemo(
-    () => [...TREE_SPECIES].sort((a, b) => a.minDuration - b.minDuration),
+    () => [...TREE_SPECIES].sort((a, b) => a.minLevelRequired - b.minLevelRequired),
     [],
   );
 
   if (!isOpen) return null;
 
   const handleSelect = (species: typeof TREE_SPECIES[number]) => {
-    if (currentDurationMinutes < species.minDuration) {
+    if (gardenerLevel < species.minLevelRequired) {
       setShakeId(species.id);
       setTimeout(() => setShakeId(null), 500);
       return;
@@ -60,7 +60,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
         </div>
 
         <p className="text-xs text-[var(--text-muted)] mb-3 shrink-0">
-          选择想要培育的树种，专注时长不足时需先调整才能解锁。
+          选择想要培育的树种，累计种树越多解锁越多树种。
         </p>
 
         {/* 2-column Grid */}
@@ -68,7 +68,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
           <div className="grid grid-cols-2 gap-3">
             {sortedSpecies.map((species) => {
               const isSelected = selectedSpeciesId === species.id;
-              const isUnlocked = currentDurationMinutes >= species.minDuration;
+              const isUnlocked = gardenerLevel >= species.minLevelRequired;
               const isShaking = shakeId === species.id;
 
               return (
@@ -122,7 +122,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
                   {/* Name */}
                   <h4 className="font-extrabold text-xs sm:text-sm text-[var(--text-main)] mb-1">{species.name}</h4>
 
-                  {/* Duration Badge */}
+                  {/* Level Badge */}
                   <div
                     className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full ${
                       isUnlocked
@@ -130,8 +130,8 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
                         : 'bg-[#ba1a1a]/10 text-[#ba1a1a]'
                     }`}
                   >
-                    <span className="material-symbols-outlined text-[11px]">schedule</span>
-                    <span>最少 {species.minDuration} 分钟</span>
+                    <span className="material-symbols-outlined text-[11px]">eco</span>
+                    {isUnlocked ? `Lv.${species.minLevelRequired}` : `需 Lv.${species.minLevelRequired}`}
                   </div>
 
                   {/* Hover Description Tooltip */}
@@ -140,7 +140,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
                     <p className="text-[10px] leading-tight text-white/90">{species.description}</p>
                     {!isUnlocked && (
                       <p className="text-[10px] text-amber-300 font-semibold mt-1">
-                        ⚠️ 需要 ≥ {species.minDuration} 分钟专注
+                        ⚠️ 需要园丁等级 ≥ {species.minLevelRequired}
                       </p>
                     )}
                     <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#26332C]" />

@@ -223,7 +223,7 @@ export default function App() {
         onClose={() => setShowSpeciesModal(false)}
         selectedSpeciesId={selectedSpeciesId}
         onSelectSpecies={setSelectedSpeciesId}
-        currentDurationMinutes={settings.focusDuration}
+        gardenerLevel={Math.floor(totalTreesPlanted / 5) + 1}
       />
 
       <AmbientSoundModal
