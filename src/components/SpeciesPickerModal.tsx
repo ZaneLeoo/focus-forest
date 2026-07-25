@@ -8,6 +8,7 @@ interface SpeciesPickerModalProps {
   selectedSpeciesId: TreeSpeciesId;
   onSelectSpecies: (speciesId: TreeSpeciesId) => void;
   gardenerLevel: number;
+  totalTreesPlanted: number;
 }
 
 export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
@@ -16,6 +17,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
   selectedSpeciesId,
   onSelectSpecies,
   gardenerLevel,
+  totalTreesPlanted,
 }) => {
   const [shakeId, setShakeId] = useState<string | null>(null);
 
@@ -25,6 +27,11 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
   );
 
   if (!isOpen) return null;
+
+  const treesNeededForLevel = gardenerLevel * 5;
+  const treesInLevel = totalTreesPlanted - (gardenerLevel - 1) * 5;
+  const levelProgress = Math.min(1, treesInLevel / 5);
+  const treesToNextLevel = Math.max(0, treesNeededForLevel - totalTreesPlanted);
 
   const handleSelect = (species: typeof TREE_SPECIES[number]) => {
     if (gardenerLevel < species.minLevelRequired) {
@@ -62,6 +69,33 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
         <p className="text-xs text-[var(--text-muted)] mb-3 shrink-0">
           选择想要培育的树种，累计种树越多解锁越多树种。
         </p>
+
+        {/* Level Progress */}
+        <div className="mb-4 p-3.5 rounded-2xl bg-[var(--bg-surface2)] border border-[var(--border)]/20 shrink-0">
+          <div className="flex justify-between items-center mb-2">
+            <div className="flex items-center gap-1.5">
+              <span className="material-symbols-outlined text-[#125238] text-base">eco</span>
+              <span className="text-xs font-bold text-[var(--text-main)]">园丁 Lv.{gardenerLevel}</span>
+            </div>
+            {treesToNextLevel > 0 ? (
+              <span className="text-[10px] text-[var(--text-muted)]">
+                再种 <strong className="text-[#125238]">{treesToNextLevel}</strong> 棵升级
+              </span>
+            ) : (
+              <span className="text-[10px] text-[#125238] font-bold">已满级！</span>
+            )}
+          </div>
+          <div className="w-full h-2 bg-[var(--border)]/30 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-[#125238] rounded-full transition-all duration-500"
+              style={{ width: `${levelProgress * 100}%` }}
+            />
+          </div>
+          <div className="flex justify-between mt-1">
+            <span className="text-[9px] text-[var(--text-muted)]">Lv.{gardenerLevel}</span>
+            <span className="text-[9px] text-[var(--text-muted)]">Lv.{gardenerLevel + 1}</span>
+          </div>
+        </div>
 
         {/* 2-column Grid */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-1.5 -m-1.5 mb-3">

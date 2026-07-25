@@ -224,6 +224,7 @@ export default function App() {
         selectedSpeciesId={selectedSpeciesId}
         onSelectSpecies={setSelectedSpeciesId}
         gardenerLevel={Math.floor(totalTreesPlanted / 5) + 1}
+        totalTreesPlanted={totalTreesPlanted}
       />
 
       <AmbientSoundModal
