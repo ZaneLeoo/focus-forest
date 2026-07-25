@@ -85,6 +85,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               required
               minLength={2}
               maxLength={20}
+              autoComplete="username"
               className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-[var(--bg-surface)] focus:ring-2 focus:ring-[#125238] outline-none transition-all"
             />
           </div>
@@ -98,6 +99,7 @@ export const LoginView: React.FC<LoginViewProps> = ({ onLogin }) => {
               placeholder={mode === 'register' ? '设置密码（至少4位）' : '输入密码'}
               required
               minLength={4}
+              autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
               className="w-full py-3 px-4 bg-[var(--bg-surface2)]/80 border border-[var(--border)]/40 rounded-xl font-semibold text-sm text-[var(--text-main)] placeholder:text-[var(--text-muted)]/50 focus:bg-[var(--bg-surface)] focus:ring-2 focus:ring-[#125238] outline-none transition-all"
             />
           </div>
