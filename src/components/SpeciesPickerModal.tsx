@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { TreeSpeciesId } from '../types';
 import { TREE_SPECIES } from '../constants/trees';
 
@@ -17,7 +17,24 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
   onSelectSpecies,
   currentDurationMinutes,
 }) => {
+  const [shakeId, setShakeId] = useState<string | null>(null);
+
+  const sortedSpecies = useMemo(
+    () => [...TREE_SPECIES].sort((a, b) => a.minDuration - b.minDuration),
+    [],
+  );
+
   if (!isOpen) return null;
+
+  const handleSelect = (species: typeof TREE_SPECIES[number]) => {
+    if (currentDurationMinutes < species.minDuration) {
+      setShakeId(species.id);
+      setTimeout(() => setShakeId(null), 500);
+      return;
+    }
+    onSelectSpecies(species.id);
+    onClose();
+  };
 
   return (
     <div
@@ -43,33 +60,40 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
         </div>
 
         <p className="text-xs text-[var(--text-muted)] mb-3 shrink-0">
-          选择想要培育的树种，悬停或点击卡片可查看详细寓意与建议专注时长。
+          选择想要培育的树种，专注时长不足时需先调整才能解锁。
         </p>
 
-        {/* 2-column Grid with padding to prevent border clipping */}
+        {/* 2-column Grid */}
         <div className="flex-1 overflow-y-auto custom-scrollbar p-1.5 -m-1.5 mb-3">
           <div className="grid grid-cols-2 gap-3">
-            {TREE_SPECIES.map((species) => {
+            {sortedSpecies.map((species) => {
               const isSelected = selectedSpeciesId === species.id;
               const isUnlocked = currentDurationMinutes >= species.minDuration;
+              const isShaking = shakeId === species.id;
 
               return (
                 <div
                   key={species.id}
-                  onClick={() => {
-                    onSelectSpecies(species.id);
-                    onClose();
-                  }}
-                  className={`group relative p-3.5 rounded-2xl cursor-pointer border-2 transition-all duration-150 flex flex-col items-center text-center select-none ${
+                  onClick={() => handleSelect(species)}
+                  className={`group relative p-3.5 rounded-2xl border-2 transition-all duration-150 flex flex-col items-center text-center select-none ${
                     species.bgClass || 'bg-[var(--bg-surface)]'
                   } ${
                     isSelected
                       ? 'border-[#125238] bg-[#125238]/5 ring-1 ring-[#125238]/30 shadow-xs'
-                      : 'border-[var(--border)]/35 hover:border-[#125238]/50 hover:shadow-xs'
-                  }`}
+                      : isUnlocked
+                        ? 'border-[var(--border)]/35 hover:border-[#125238]/50 hover:shadow-xs cursor-pointer'
+                        : 'border-[var(--border)]/20 opacity-60 cursor-not-allowed'
+                  } ${isShaking ? 'animate-shake' : ''}`}
                 >
+                  {/* Locked Overlay */}
+                  {!isUnlocked && (
+                    <div className="absolute inset-0 bg-[var(--bg-surface)]/50 rounded-2xl z-10 flex items-center justify-center">
+                      <span className="material-symbols-outlined text-[var(--text-muted)] text-2xl">lock</span>
+                    </div>
+                  )}
+
                   {/* Selected Indicator or Rare Badge */}
-                  <div className="absolute top-2 right-2 flex items-center gap-1">
+                  <div className="absolute top-2 right-2 flex items-center gap-1 z-20">
                     {species.isRare && (
                       <span className="material-symbols-outlined text-amber-500 text-sm fill-1" title="稀有品种">
                         star
@@ -116,7 +140,7 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
                     <p className="text-[10px] leading-tight text-white/90">{species.description}</p>
                     {!isUnlocked && (
                       <p className="text-[10px] text-amber-300 font-semibold mt-1">
-                        ⚠️ 建议至少专注 {species.minDuration} 分钟
+                        ⚠️ 需要 ≥ {species.minDuration} 分钟专注
                       </p>
                     )}
                     <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-[#26332C]" />
@@ -137,4 +161,3 @@ export const SpeciesPickerModal: React.FC<SpeciesPickerModalProps> = ({
     </div>
   );
 };
-
