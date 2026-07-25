@@ -9,7 +9,7 @@ const STORAGE_KEYS = {
 export const DEFAULT_USER: UserProfile = {
   name: '园丁',
   title: '高级林业师',
-  avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBl4vssSUZmSd8YRtpqsDlxTyOxVhkBmJ92vSTbuWQ_XcdpJqi5GPdAsTn_AKirGXvl26U7VUw2cqaFJi1NhQLVmQbP0UDF9aVPbq4-YO2l_0pHsjvSTKbb74uBaZ3XeyUSSRS43cPAqwL5EbfDeApdTOoB4ZLC8IBSVIU2PaKlZZGfxAP0tv0GYmqFewY-h04iERDL7L4JI8y-zPe-iXrxIHSMyeYsno91mAn8BGxroE5vGd-URM2N',
+  avatarUrl: '',
   level: 4,
   totalTreesPlanted: 38,
   streakDays: 8,
@@ -127,43 +127,4 @@ export function saveSettings(settings: AppSettings): void {
   } catch (e) {
     console.error('Failed to save settings', e);
   }
-}
-
-export function exportDataAsJSON(): void {
-  const data = {
-    userProfile: loadUserProfile(),
-    settings: loadSettings(),
-    sessions: loadSessions(),
-    exportedAt: new Date().toISOString(),
-  };
-
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `focus-forest-backup-${new Date().toISOString().slice(0, 10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-export function exportSessionsAsCSV(): void {
-  const sessions = loadSessions();
-  const headers = ['Session ID', 'Tree Name', 'Category', 'Duration (min)', 'Completed', 'Date'];
-  const rows = sessions.map(s => [
-    s.id,
-    s.treeName,
-    s.category,
-    s.durationMinutes.toString(),
-    s.completed ? 'Yes' : 'No',
-    new Date(s.createdAt).toLocaleString('zh-CN'),
-  ]);
-
-  const csvContent = [headers.join(','), ...rows.map(r => r.map(field => `"${field}"`).join(','))].join('\n');
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `focus-forest-sessions-${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
 }
