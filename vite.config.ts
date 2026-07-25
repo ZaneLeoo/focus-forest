@@ -14,10 +14,10 @@ export default defineConfig(() => {
     build: {
       rollupOptions: {
         output: {
-          manualChunks: {
-            'three': ['three'],
-            'recharts': ['recharts'],
-            'motion': ['motion'],
+          manualChunks(id) {
+            if (id.includes('node_modules/three')) return 'three';
+            if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) return 'recharts';
+            if (id.includes('node_modules/motion')) return 'motion';
           },
         },
       },
